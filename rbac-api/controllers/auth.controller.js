@@ -1,17 +1,18 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
-import { pkg } from "jsonwebtoken";
-const { sign } = pkg;
+import jsonwebtoken from "jsonwebtoken";
+const { sign } = jsonwebtoken;
 
 export const register = async (req, res, next) => {
 	const { username, email, password } = req.body;
 	try {
-		const user = await User.findOne({ username });
-		if (user)
-			return res.status(200).json({ message: "user already exists..." });
+		// const user = await User.findOne({ username });
+		// if (user)
+		// 	return res.status(200).json({ message: "user already exists..." });
 		const hashedPassword = await bcrypt.hash(password, 10);
 		const result = await User.create({
 			username,
+			email,
 			password: hashedPassword,
 		});
 		res
@@ -39,9 +40,9 @@ export const login = async (req, res, next) => {
 				role: user.role,
 			},
 			process.env.JWT_SECRET,
-			{ expires: "7d" },
+			{ expiresIn: "7d" },
 		);
-		res.status(200).json({ token: token, user_role: user.role });
+		res.status(200).json({token: token, user_role: user.role})
 	} catch (err) {
 		next(err);
 	}
