@@ -2,10 +2,10 @@ import jsonwebtoken from "jsonwebtoken";
 const { verify } = jsonwebtoken;
 
 export const verifyToken = async (req, res, next) => {
-	const auth = req.headers.autorization;
+	const auth = req.headers.authorization;
 	if (!auth) return res.status(400).json({ message: "no token provided" });
 
-	const token = auth.split("")[1];
+	const token = auth.split(" ")[1];
 	if (!token) return res.status(400).json({ message: "no token format" });
 
 	try {

@@ -4,7 +4,7 @@ import jsonwebtoken from "jsonwebtoken";
 const { sign } = jsonwebtoken;
 
 export const register = async (req, res, next) => {
-	const { username, email, password } = req.body;
+	const { username, email, password, role } = req.body;
 	try {
 		// const user = await User.findOne({ username });
 		// if (user)
@@ -14,6 +14,7 @@ export const register = async (req, res, next) => {
 			username,
 			email,
 			password: hashedPassword,
+			role,
 		});
 		res
 			.status(201)
@@ -24,7 +25,7 @@ export const register = async (req, res, next) => {
 };
 
 export const login = async (req, res, next) => {
-	const { username, email, password } = req.body;
+	const { username, email, password} = req.body;
 
 	try {
 		const user = await User.findOne({ username });
@@ -42,7 +43,7 @@ export const login = async (req, res, next) => {
 			process.env.JWT_SECRET,
 			{ expiresIn: "7d" },
 		);
-		res.status(200).json({token: token, user_role: user.role})
+		res.status(200).json({ token: token, user_role: user.role });
 	} catch (err) {
 		next(err);
 	}
