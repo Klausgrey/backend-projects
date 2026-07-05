@@ -4,3 +4,5 @@ import express from "express";
 const router = express.Router();
 
 router.get("/profile", verifyToken, getProfile);
+
+export default router
