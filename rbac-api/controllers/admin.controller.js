@@ -8,8 +8,18 @@ export const getAllUsers = async (_req, res, next) => {
 	try {
 		const data = await User.find();
 		res.status(200).json({
-			data: data
+			data: data,
 		});
+	} catch (err) {
+		next(err);
+	}
+};
+
+export const deleteById = async (req, res, next) => {
+	try {
+		const userId = req.params.id;
+		await User.findByIdAndDelete(userId);
+		res.status(204).send();
 	} catch (err) {
 		next(err);
 	}
