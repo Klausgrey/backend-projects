@@ -8,3 +8,9 @@ if (!projectName) {
 	process.exit(1);
 }
 
+const folders = ["models", "controllers", "config", "routers", "middleware"];
+
+fs.mkdirSync(path.join(__dirname, projectName));
+for (let i of folders) {
+	fs.mkdirSync(path.join(__dirname, projectName, i));
+}
