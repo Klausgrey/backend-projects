@@ -19,3 +19,13 @@ fs.writeFileSync(
 	path.join(__dirname, projectName, ".gitignore"),
 	"node_modules/\n.env\npackage.lock.json",
 );
+
+fs.writeFileSync(
+	path.join(__dirname, projectName, "app.js"),
+	"import express from 'express'\nconst app = express()\r\nexport default app",
+);
+
+fs.writeFileSync(
+	path.join(__dirname, projectName, "server.js"),
+	"import app from './app.js'\napp.listen(3000, () => {console.log('server is running...')})",
+);
