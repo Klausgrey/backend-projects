@@ -14,3 +14,8 @@ fs.mkdirSync(path.join(__dirname, projectName));
 for (let i of folders) {
 	fs.mkdirSync(path.join(__dirname, projectName, i));
 }
+
+fs.writeFileSync(
+	path.join(__dirname, projectName, ".gitignore"),
+	"node_modules/\n.env\npackage.lock.json",
+);
