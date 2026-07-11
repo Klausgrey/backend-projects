@@ -16,4 +16,12 @@ export const createWebhook = async (
 	});
 };
 
+export const getAllWebhooks = async () => {
+	return await prisma.webhook.findMany();
+};
 
+export const getWebhookById = async (id: number) => {
+	return await prisma.webhook.findUnique({
+		where: { id },
+	});
+};
