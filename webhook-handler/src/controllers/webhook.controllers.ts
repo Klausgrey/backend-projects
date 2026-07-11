@@ -19,4 +19,15 @@ export const receiveWebhook = async (
 	}
 };
 
-
+export const getAll = async (
+	req: Request,
+	res: Response,
+	next: NextFunction,
+) => {
+	try {
+		const data = await getAllWebhooks();
+		res.status(200).json({ data });
+	} catch (err) {
+		next(err);
+	}
+};
