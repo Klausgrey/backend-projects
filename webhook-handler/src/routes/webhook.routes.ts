@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post("/", receiveWebhook);
 router.get("/", getAll);
-router.post("/:id", getAllById);
+router.get("/:id", getAllById);
 
 export default router
