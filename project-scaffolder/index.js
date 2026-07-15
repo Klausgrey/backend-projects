@@ -8,12 +8,19 @@ if (!projectName) {
 	console.error("this was no project name provided...");
 	process.exit(1);
 }
+fs.mkdirSync(path.join(process.cwd(), projectName));
 
 const folders = ["models", "controllers", "config", "routers", "middleware"];
 
-fs.mkdirSync(path.join(process.cwd(), projectName));
-for (let i of folders) {
-	fs.mkdirSync(path.join(process.cwd(), projectName, i));
+const rootFolder = ["src"];
+for (let i in rootFolder) {
+	const rootPath = path.join(process.cwd(), rootFolder, i)
+	fs.mkdirSync(rootPath)
+
+	for (let j of folders) {
+		const folderPath = path.join(rootPath, j);
+		 fs.mkdirSync(folderPath)
+	}
 }
 
 fs.writeFileSync(
