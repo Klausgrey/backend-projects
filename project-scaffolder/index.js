@@ -14,12 +14,12 @@ const folders = ["models", "controllers", "config", "routers", "middleware"];
 
 const rootFolder = ["src"];
 for (let i of rootFolder) {
-	const rootPath = path.join(process.cwd(), projectName, i)
-	fs.mkdirSync(rootPath)
+	const rootPath = path.join(process.cwd(), projectName, i);
+	fs.mkdirSync(rootPath);
 
 	for (let j of folders) {
 		const folderPath = path.join(rootPath, j);
-		 fs.mkdirSync(folderPath)
+		fs.mkdirSync(folderPath);
 	}
 }
 
@@ -37,3 +37,5 @@ fs.writeFileSync(
 	path.join(process.cwd(), projectName, "server.js"),
 	"import app from './app.js'\napp.listen(3000, () => {console.log('server is running...')})",
 );
+
+fs.writeFileSync(path.join(process.cwd(), projectName, ".env"), "");
