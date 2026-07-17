@@ -13,8 +13,8 @@ fs.mkdirSync(path.join(process.cwd(), projectName));
 const folders = ["models", "controllers", "config", "routers", "middleware"];
 
 const rootFolder = ["src"];
-for (let i in rootFolder) {
-	const rootPath = path.join(process.cwd(), rootFolder, i)
+for (let i of rootFolder) {
+	const rootPath = path.join(process.cwd(), projectName, i)
 	fs.mkdirSync(rootPath)
 
 	for (let j of folders) {
