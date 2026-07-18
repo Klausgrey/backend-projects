@@ -25,7 +25,7 @@ for (let i of rootFolder) {
 
 fs.writeFileSync(
 	path.join(process.cwd(), projectName, ".gitignore"),
-	"node_modules/\n.env\npackage.lock.json",
+	"node_modules/\n.env\npackage.lock.json\n.DS_Store",
 );
 
 fs.writeFileSync(
