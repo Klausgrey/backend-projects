@@ -14,6 +14,6 @@ export const createEmployeeSchema = z.object({
 });
 
 export const createUserSchema = z.object({
-	email: z.email(),
+	email: z.string().email(),
 	password: z.string().min(8).max(15),
 });

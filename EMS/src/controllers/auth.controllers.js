@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import Employee from "../models/employees.model.js";
-import createUserSchema from "../validate/validation.js";
+import { createUserSchema } from "../validate/validation.js";
 import bcrypt from "bcrypt";
 import { sendSuccess, sendError } from "../utils/response.js";
 import Jwt from "jsonwebtoken";
