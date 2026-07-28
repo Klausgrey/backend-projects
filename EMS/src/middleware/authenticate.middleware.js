@@ -1,6 +1,7 @@
 import { sendSuccess, sendError } from "../utils/response.js";
 import Jwt from "jsonwebtoken";
 const jwt = Jwt;
+import "dotenv/config"
 
 export function validateToken(req, res, next) {
 	const auth = req.headers["authorization"];
