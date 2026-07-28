@@ -3,7 +3,7 @@ import Department from "../models/department.models.js";
 import createEmployeeSchema from "../validate/validation.js";
 import { sendSuccess, sendError } from "../utils/response.js";
 
-export const createEmployee = async (req, res, next) => {
+export async function createEmployee(req, res, next) {
 	try {
 		const validateData = createEmployeeSchema.parse(req.body);
 
@@ -21,4 +21,4 @@ export const createEmployee = async (req, res, next) => {
 	} catch (err) {
 		next(err);
 	}
-};
+}

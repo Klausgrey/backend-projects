@@ -4,6 +4,6 @@ import express from "express";
 const app = express();
 
 app.use(express.json());
-app.use("/auth", authRouter);
-app.use("/auth/employee", employeeRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/employee", employeeRouter);
 export default app;
