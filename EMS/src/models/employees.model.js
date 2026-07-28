@@ -22,25 +22,10 @@ const employeeSchema = new mongoose.Schema(
 		department: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Department",
-			default: null,
-		},
-		manager: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Employee",
-			default: null,
 		},
 	},
 	{ timestamps: true },
 );
 
-// Handy for listing an employee's direct reports without a separate query pattern
-employeeSchema.virtual("reports", {
-	ref: "Employee",
-	localField: "_id",
-	foreignField: "manager",
-});
-
-employeeSchema.set("toJSON", { virtuals: true });
-employeeSchema.set("toObject", { virtuals: true });
 
 export default mongoose.model("Employee", employeeSchema);
