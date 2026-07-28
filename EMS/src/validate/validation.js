@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const createEmployeeSchema = z.object({
+export const createEmployeeSchema = z.object({
 	firstName: z.string(),
 	lastName: z.string(),
 	email: z.string().email(),
@@ -13,8 +13,7 @@ const createEmployeeSchema = z.object({
 	manager: z.string().optional(),
 });
 
-const createUserSchema = z.object({
+export const createUserSchema = z.object({
 	email: z.email(),
 	password: z.string().min(8).max(15),
 });
-export default { createEmployeeSchema, createUserSchema };
