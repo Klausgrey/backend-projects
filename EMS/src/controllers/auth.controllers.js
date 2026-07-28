@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import Employee from "../models/employees.model.js";
+import createUserSchema from "../validate/validation.js";
 import bcrypt from "bcrypt";
 import { sendSuccess, sendError } from "../utils/response.js";
 import Jwt from "jsonwebtoken";
@@ -7,16 +8,16 @@ const jwt = Jwt;
 import "dotenv/config";
 
 export async function register(req, res, next) {
-	const { email, password } = req.body;
+	const validateBody = createUserSchema.parse(req.body);
 	try {
-		const employee = await Employee.findOne({ email });
+		const employee = await Employee.findOne({ email: validateBody.email });
 		if (!employee) return sendError(res, 404, "invalid credentials");
 		const existing = await User.findOne({ employeeId: employee._id });
 		if (existing) return sendError(res, 409, "Employee already exists");
 
-		const hashedPassword = await bcrypt.hash(password, 10);
+		const hashedPassword = await bcrypt.hash(validateBody.password, 10);
 		const user = await User.create({
-			email,
+			email: validateBody.email,
 			hashedPassword,
 			role: employee.isAdmin ? "admin" : "employee",
 			employeeId: employee._id,
@@ -37,11 +38,14 @@ export async function register(req, res, next) {
 }
 
 export async function login(req, res, next) {
-	const { email, password } = req.body;
+	const validateBody = createUserSchema.parse(req.body);
 	try {
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ email: validateBody.email });
 		if (!user) return sendError(res, 404, "invalid credentials");
-		const match = await bcrypt.compare(password, user.hashedPassword);
+		const match = await bcrypt.compare(
+			validateBody.password,
+			user.hashedPassword,
+		);
 		if (!match) return sendError(res, 401, "invalid credentials");
 
 		const payload = {
