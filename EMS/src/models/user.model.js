@@ -9,10 +9,10 @@ const userSchema = new mongoose.Schema(
 			lowercase: true,
 			trim: true,
 		},
-		hashedpassword: { type: String, required: true },
+		hashedPassword: { type: String, required: true },
 		role: { type: String, enum: ["admin", "employee"], default: "employee" },
 		refreshToken: { type: String, default: null },
-		employee: {
+		employeeId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Employee",
 			unique: true,
