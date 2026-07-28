@@ -24,14 +24,14 @@ export async function createEmployee(req, res, next) {
 	}
 }
 
-export async function getAllEmployess(req, res, next) {
+export async function getAllEmployees(req, res, next) {
 	try {
 		const page = parseInt(req.query.page) || 1;
 		const limit = parseInt(req.query.limit) || 10;
 		const sort = (page - 1) * limit;
 		const employee = await Employee.find().sort(sort).limit(limit);
 		const total = await Employee.countDocuments({ isActive: true });
-		
+
 		return sendSuccess(
 			res,
 			200,
