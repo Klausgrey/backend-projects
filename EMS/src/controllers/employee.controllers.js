@@ -86,6 +86,21 @@ export async function updateEmployees(req, res, next) {
 		next(err);
 	}
 }
+
+export async function deleteEmployee(req, res, next) {
+	const employeeId = req.params.id;
+	try {
+		const employee = await Employee.findByIdAndUpdate(
+			employeeId,
+			{ isActive: false },
+			{ new: true },
+		);
+		if (!employee) return sendError(res, 404, "Employee not found");
+		return sendSuccess(res, 200, employee, "Deleted...");
+	} catch (err) {
+		next(err);
+	}
+}
 // ### Employees
 // | Method | Endpoint | Access | Description |
 // |---|---|---|---|
