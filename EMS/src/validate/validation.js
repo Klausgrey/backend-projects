@@ -10,7 +10,6 @@ export const createEmployeeSchema = z.object({
 	jobTitle: z.string(),
 	salary: z.number(),
 	department: z.string(),
-	manager: z.string().optional(),
 });
 
 export const createUserSchema = z.object({

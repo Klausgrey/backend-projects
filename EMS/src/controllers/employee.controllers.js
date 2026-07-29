@@ -46,7 +46,6 @@ export async function getAllEmployees(req, res, next) {
 }
 
 export async function getCurrentEmployee(req, res, next) {
-	const userId = req.user._id;
 	try {
 		const employee = await Employee.findById(req.user.employeeId);
 		if (!employee) return sendError(res, 404, "employee not found");
@@ -57,7 +56,36 @@ export async function getCurrentEmployee(req, res, next) {
 	}
 }
 
+export async function updateEmployees(req, res, next) {
+	const allowedFields = [
+		"firstName",
+		"lastName",
+		"phone",
+		"address",
+		"dob",
+		"jobTitle",
+		"salary",
+		"department",
+	];
+	const updates = {};
+	for (let field of allowedFields) {
+		if (req.body[field] !== undefined) updates[field] = req.body[field];
+	}
+	const employeeId = req.params.id;
 
+	try {
+		const employee = await Employee.findByIdAndUpdate(
+			employeeId,
+			updates,
+			{ new: true },
+			{ runValidator: true },
+		);
+		if (!employee) return sendError(res, 404, "Employee not found");
+		return sendSuccess(res, 200, employee, "updated employee");
+	} catch (err) {
+		next(err);
+	}
+}
 // ### Employees
 // | Method | Endpoint | Access | Description |
 // |---|---|---|---|
