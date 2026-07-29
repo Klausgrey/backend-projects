@@ -2,7 +2,6 @@ import Employee from "../models/employees.model.js";
 import Department from "../models/department.models.js";
 import { createEmployeeSchema } from "../validate/validation.js";
 import { sendSuccess, sendError } from "../utils/response.js";
-import { tr } from "date-fns/locale";
 
 export async function createEmployee(req, res, next) {
 	try {
@@ -45,6 +44,19 @@ export async function getAllEmployees(req, res, next) {
 		next(err);
 	}
 }
+
+export async function getCurrentEmployee(req, res, next) {
+	const userId = req.user._id;
+	try {
+		const employee = await Employee.findById(req.user.employeeId);
+		if (!employee) return sendError(res, 404, "employee not found");
+
+		return sendSuccess(res, 200, employee, "successful");
+	} catch (err) {
+		next(err);
+	}
+}
+
 
 // ### Employees
 // | Method | Endpoint | Access | Description |
