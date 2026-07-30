@@ -61,3 +61,15 @@ export async function login(req, res, next) {
 		next(err);
 	}
 }
+
+export async function getUser(req, res, next) {
+	try {
+		const user = await User.findById(req.user.id).select(
+			"hashedPassword, refreshToken",
+		);
+		return sendSuccess(res, 200, user, "current user");
+	} catch (err) {
+		next(err);
+	}
+}
+// | GET | `/api/auth/me` | Authenticated | Return current logged-in user + profile |
