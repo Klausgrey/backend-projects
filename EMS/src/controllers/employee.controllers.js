@@ -46,7 +46,10 @@ export async function getAllEmployees(req, res, next) {
 }
 
 export async function getCurrentEmployee(req, res, next) {
+	const employeeId = req.params.id;
 	try {
+		if (employeeId !== req.user.employeeId)
+			return sendError(res, 404, "employee with this id not found");
 		const employee = await Employee.findById(req.user.employeeId);
 		if (!employee) return sendError(res, 404, "employee not found");
 
