@@ -1,6 +1,6 @@
 import {
 	createEmployee,
-	getAllEmployess,
+	getAllEmployees,
 	getCurrentEmployee,
 	updateEmployees,
 	deleteEmployee,
@@ -13,7 +13,7 @@ import express from "express";
 const router = express.Router();
 
 router.post("/", validateToken, isAdmin, createEmployee);
-router.get("/", validateToken, isAdmin, getAllEmployess);
+router.get("/", validateToken, isAdmin, getAllEmployees);
 router.get("/:id", validateToken, getCurrentEmployee);
 router.patch("/", validateToken, updateEmployees);
 router.delete("/:id", validateToken, deleteEmployee);

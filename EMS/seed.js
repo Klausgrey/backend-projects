@@ -5,7 +5,7 @@ import User from "./src/models/user.model.js";
 import Employee from "./src/models/employees.model.js";
 
 async function seedAdmin() {
-	await mongoose.connect(process.env.MONGO_URL);
+	await mongoose.connect(process.env.MONGO_URI);
 
 	const existing = await User.findOne({ isAdmin: true });
 	if (existing) {
