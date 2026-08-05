@@ -1,3 +1,4 @@
+import "dotenv/config";
 import authRouter from "./src/routers/auth.route.js";
 import employeeRouter from "./src/routers/employee.route.js";
 import departmentRouter from "./src/routers/department.route.js";
