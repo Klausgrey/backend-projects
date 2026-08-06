@@ -7,6 +7,6 @@ const app = express();
 
 app.use(express.json());
 app.use("/api/auth", authRouter);
-app.use("/api/employee", employeeRouter);
+app.use("/api/employees", employeeRouter);
 app.use("api/departments", departmentRouter);
 export default app;

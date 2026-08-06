@@ -27,8 +27,8 @@ export async function getAllEmployees(req, res, next) {
 	try {
 		const page = parseInt(req.query.page) || 1;
 		const limit = parseInt(req.query.limit) || 10;
-		const sort = (page - 1) * limit;
-		const employee = await Employee.find().sort(sort).limit(limit);
+		const skip = (page - 1) * limit;
+		const employee = await Employee.find().skip(skip).limit(limit);
 		const total = await Employee.countDocuments({ isActive: true });
 
 		return sendSuccess(
@@ -46,7 +46,7 @@ export async function getAllEmployees(req, res, next) {
 }
 
 export async function getCurrentEmployee(req, res, next) {
-	const employeeId = req.params.id;
+	const employeeId = req.params.id
 	try {
 		if (employeeId !== req.user.employeeId)
 			return sendError(res, 404, "employee with this id not found");
