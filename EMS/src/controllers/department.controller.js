@@ -1,4 +1,5 @@
 import Department from "../models/department.models.js";
+import Employee from "../models/employees.model.js";
 import { sendSuccess, sendError } from "../utils/response.js";
 
 export async function createDepartment(req, res, next) {
@@ -32,6 +33,47 @@ export async function getDepartments(req, res, next) {
 	} catch (err) {
 		next(err);
 	}
+}
+
+export async function getDepartmentsById(req, res, next) {
+	const departmentId = req.params.id;
+	try {
+		const department = await Department.findById(departmentId);
+		if (!department) return sendError(res, 404, "this ID is not found");
+		const employee = await Employee.find({ department: departmentId }).select(
+			"-isAdmin, -salary",
+		);
+		return sendSuccess(res, 200, { employee, department }, "Department found");
+	} catch (err) {
+		next(err);
+	}
+}
+
+export async function updateDepartment(req, res, next) {
+	const departmentId = req.params.id;
+	try {
+		const { name } = req.body;
+		if (name) {
+			const existing = await Department.findOne({
+				name,
+				_id: { $ne: departmentId },
+			});
+			if (existing)
+				return sendError(res, 409, "This department already exists");
+		}
+		const data = await Department.findByIdAndUpdate(
+			departmentId,
+			{ name },
+			{ new: true, runValidators: true },
+		);
+		if (!data) return sendError(res, 404, "department name not found");
+		return sendSuccess(res, 200, data, "Department name updated successfully");
+	} catch (err) {
+		next(err);
+	}
+}
+export async function deleteDepartment(req, res, next) {
+	
 }
 // ### Departments
 // | Method | Endpoint | Access | Description |

@@ -18,7 +18,7 @@ const employeeSchema = new mongoose.Schema(
 		jobTitle: { type: String, required: true },
 		salary: { type: Number, required: true },
 		isActive: { type: Boolean, default: true },
-		idAdmin: { type: Boolean, default: false },
+		isAdmin: { type: Boolean, default: false },
 
 		department: {
 			type: mongoose.Schema.Types.ObjectId,
