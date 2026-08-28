@@ -73,7 +73,17 @@ export async function updateDepartment(req, res, next) {
 	}
 }
 export async function deleteDepartment(req, res, next) {
-	
+	const { departmentId } = req.params.id;
+
+	try {
+		const data = await Department.findByIdAndDelete(departmentId, {
+			new: true,
+		});
+		if (!data) return sendError(res, 404, "Department not found");
+		return sendSuccess(res, 200, data, "Deleted...");
+	} catch (err) {
+		next(err);
+	}
 }
 // ### Departments
 // | Method | Endpoint | Access | Description |
