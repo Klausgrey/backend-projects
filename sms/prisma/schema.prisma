@@ -1,0 +1,198 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  hashedPassword String
+  firstName String
+  lastName String
+  role Role
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  admin Admin?
+  student Student?
+  teacher Teacher?
+}
+
+enum Role {
+  SUPER_ADMIN
+  Admin
+  TEACHER
+  STUDENT
+}
+
+model Admin {
+  id String @id @default(uuid())
+  user_id String @unique
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Student {
+  id String @id @default(uuid())
+  user_id String @unique
+  departmen_id String @unique
+  level_id String @unique
+
+
+  parent Parent[]
+  invoice Invoice[]
+
+  user User @relation(fields: [user_id], references: [id])
+  department Department @relation(fields: [departmen_id], references: [id])
+  level Level @relation(fields: [level_id], references: [id])
+}
+
+model Teacher {
+  id String @id @default(uuid())
+  user_id String @unique
+  bio String?
+
+
+  courseteacher CourseTeacher[]
+
+  user User @relation(fields: [user_id], references: [id])
+}
+
+model Parent {
+  id String @id @default(uuid())
+  email String @unique
+  student_id String
+
+
+  student Student @relation(fields: [student_id], references: [id])
+
+  @@unique([student_id])
+}
+
+model Department {
+  id String @id @default(uuid())
+  name String
+
+  student Student[]
+  courses Courses[]
+}
+
+model Courses {
+  id String @id @default(uuid())
+  department_id String
+  level_id String
+  capacity Int
+
+
+  enrollment Enrollment[]
+  course_teacher CourseTeacher[]
+
+  department Department @relation(fields: [department_id], references: [id])
+  level Level @relation(fields: [level_id], references: [id])
+
+  @@unique([department_id, level_id])
+}
+
+model Level {
+  id String @id @default(uuid())
+  name String
+
+  student Student[]
+  courses Courses[]
+}
+
+model Enrollment {
+  id String @id @default(uuid())
+  student_id String
+  course_id String
+  status String
+  semester_id String
+
+
+  student Student @relation(fields: [student_id], references: [id])
+  course Courses @relation(fields: [course_id], references: [id])
+  semester Semester @relation(fields: [semester_id], references: [id])
+
+  @@unique([student_id, course_id, semester_id])
+}
+
+model CourseTeacher {
+  id String @id @default(uuid())
+  teacher_id String
+  course_id String
+
+  teacher Teacher @relation(fields: [teacher_id], references: [id])
+  course Courses @relation(fields: [course_id], references: [id])
+
+  @@unique([teacher_id, course_id])
+}
+
+model Semester {
+  id String @id @default(uuid())
+  session_id String @unique
+  resumption_date DateTime
+
+  invoice Invoice[]
+
+  session AcademicSession @relation(fields: [session_id], references: [id])
+}
+
+model AcademicSession {
+  id String @id @default(uuid())
+  name String
+
+  semester Semester[]
+}
+
+model Invoice {
+  id String @id @default(uuid())
+  student_id String
+  semester_id String
+  amount Int
+
+  payment Payment[]
+
+
+  student Student @relation(fields: [student_id], references: [id])
+  semester Semester @relation(fields: [semester_id], references: [id])
+
+  @@unique([student_id, semester_id])
+}
+
+model Payment {
+  id String @id @default(uuid())
+  invoice_id String
+  amount_paid Int
+  status Status
+
+  invoice Invoice @relation(fields: [invoice_id], references: [id])
+
+  @@unique([invoice_id])
+}
+
+enum Status {
+  PENDING
+  PAID
+  DENIED
+}
+
+model Report {
+  id String @id @default(uuid())
+  report_type String
+  report_id String
+  target_type String
+  target_id String
+  status String
+}
