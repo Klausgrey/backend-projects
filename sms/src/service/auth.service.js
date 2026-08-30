@@ -3,16 +3,22 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 
+function fail(message, statusCode) {
+	const err = new Error(message);
+	err.statusCode = statusCode;
+	throw err;
+}
+
 export async function register() {}
 
 export async function loginUser({ email, password }) {
-	if (!email || !password) throw new Error("email and password are required");
+	if (!email || !password) fail("email and password are required", 400);
 
 	const user = await findUserbyEmail(email);
-	if (!user) throw new Error("user with this email does not exists");
+	if (!user) fail("user with this email does not exists", 401);
 
 	const match = await bcrypt.compare(password, user.hashedPassword);
-	if (!match) throw new Error("incorrect password");
+	if (!match) fail("incorrect password", 401);
 
 	const payload = {
 		id: user.id,
