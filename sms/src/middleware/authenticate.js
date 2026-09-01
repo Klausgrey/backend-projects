@@ -5,7 +5,7 @@ import "dotenv/config";
 
 export async function authenticate(req, res, next) {
 	try {
-		const auth = req.headers["authenticate"];
+		const auth = req.headers["authorization"];
 		if (!auth) return sendError(res, 401, "token was not provided");
 		const token = auth.split(" ")[1];
 		if (!token) return sendError(res, 401, "invalid token format");
@@ -14,7 +14,8 @@ export async function authenticate(req, res, next) {
 		const user = await findUserById(decoded.id);
 		if (!user) return sendError(res, 401, "user not found");
 
-		req.user = decoded;
+		delete user.hashedPassword;
+		req.user = user;
 		next();
 	} catch (err) {
 		next(err);
