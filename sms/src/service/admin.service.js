@@ -1,6 +1,8 @@
-import { createAdmin as createAdminRecords, findUserbyEmail } from "../models/user.model.js";
+import {
+	createAdmin as createAdminRecords,
+	findUserbyEmail,
+} from "../models/user.model.js";
 import bcrypt from "bcrypt";
-
 
 function fail(message, statusCode) {
 	const err = new Error(message);
@@ -9,7 +11,7 @@ function fail(message, statusCode) {
 }
 
 export async function registerAdmin({ email, password, firstName, lastName }) {
-	if ((!email || !password || !firstName || !lastName))
+	if (!email || !password || !firstName || !lastName)
 		fail("all fields are required", 400);
 
 	const isExisting = await findUserbyEmail(email);
@@ -17,7 +19,13 @@ export async function registerAdmin({ email, password, firstName, lastName }) {
 
 	const hashedPassword = await bcrypt.hash(password, 10);
 
-	const admin = await createAdminRecords(email, hashedPassword, firstName, lastName);
+	const {user, admin} = await createAdminRecords({
+		email,
+		hashedPassword,
+		firstName,
+		lastName,
+	});
 
-	return { admin };
+	delete user.hashedPassword;
+	return { user, admin };
 }

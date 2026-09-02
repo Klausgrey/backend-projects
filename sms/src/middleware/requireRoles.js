@@ -1,7 +1,7 @@
 export function requireRole(roles) {
 	return (req, _res, next) => {
-		if (!roles.include(req.user?.role)) {
-			const error = new Error(`access required to ${role.join(", ")}`);
+		if (!roles.includes(req.user?.role)) {
+			const error = new Error(`access required to ${roles.join(", ")}`);
 			error.statusCode = 403;
 			return next(error);
 		}
