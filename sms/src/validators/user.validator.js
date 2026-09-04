@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const adminSchema = Joi.object({
+const userSchema = Joi.object({
 	email: Joi.string().email().required().messages({
 		"string.email": "email must be a valid one",
 		"any.required": "email is required",
@@ -8,6 +8,8 @@ const adminSchema = Joi.object({
 	hashedPassword: Joi.string()
 		.required()
 		.messages({ "any.requires": "password is required" }),
+	firstName: Joi.string().required(),
+	lastName: Joi.string().required(),
 });
 
-export default adminSchema;
+export default userSchema;

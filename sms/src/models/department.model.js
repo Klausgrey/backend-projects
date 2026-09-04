@@ -4,6 +4,10 @@ export async function createDepartment({ name }) {
 	return prisma.department.create({ data: { name } });
 }
 
-export async function findDepartment({ name }) {
+export async function findDepartmentById({ name }) {
 	return prisma.department.findFirst({ where: { name } });
+}
+
+export async function findDepartmentByIdById({ id }) {
+	return prisma.department.findUnique({ where: { id } });
 }

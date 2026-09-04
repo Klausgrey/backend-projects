@@ -9,12 +9,10 @@ function fail(message, statusCode) {
 	throw err;
 }
 
-export async function register() {}
+// export async function register() {}
 
 export async function loginUser({ email, password }) {
-	if (!email || !password) fail("email and password are required", 400);
-
-	const user = await findUserbyEmail(email);
+	const user = await findUserbyEmail({ email });
 	if (!user) fail("user with this email does not exists", 401);
 
 	const match = await bcrypt.compare(password, user.hashedPassword);

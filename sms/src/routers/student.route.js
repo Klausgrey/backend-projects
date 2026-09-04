@@ -1,5 +1,5 @@
-import { createLevel } from "../controllers/level.controller.js";
-import levelSchema from "../validators/level.validator.js";
+import { createStudent } from "../controllers/student.controller.js";
+import userSchema from "../validators/user.validator.js";
 import validate from "../middleware/validate.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { requireRole } from "../middleware/requireRoles.js";
@@ -8,11 +8,11 @@ import express from "express";
 const router = express.Router();
 
 router.post(
-	"/level",
+	"/student",
 	authenticate,
 	requireRole("ADMIN"),
-	validate(levelSchema),
-	createLevel,
+	validate(userSchema),
+	createStudent,
 );
 
 export default router;
