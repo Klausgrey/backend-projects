@@ -2,24 +2,29 @@ import prisma from "../config/prisma.js";
 
 export async function createStudent({
 	email,
-	hashedpassword,
+	hashedPassword,
 	firstName,
-	LastName,
+	lastName,
+	department_id,
+	level_id,
 }) {
 	const result = await prisma.$transaction(async (tx) => {
 		const user = await tx.user.create({
 			data: {
 				email,
-				hashedpassword,
+				hashedPassword,
 				firstName,
-				LastName,
+				lastName,
 				role: "STUDENT",
 			},
 		});
 		const student = await tx.student.create({
-			user_id: user.id,
-			department_id,
-			level_id,
+			data: {
+				user_id: user.id,
+				department_id,
+				level_id,
+			},
+			include: { department: true, level: true },
 		});
 		return { user, student };
 	});

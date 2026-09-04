@@ -1,6 +1,7 @@
 import {
 	createLevel as createLevelRecord,
 	findLevelByName,
+	getLevels as getLevelRecords,
 } from "../models/level.model.js";
 
 function fail(message, statusCode) {
@@ -18,4 +19,9 @@ export async function createLevel({ name }) {
 	const data = await createLevelRecord({ name });
 
 	return { data };
+}
+
+export async function getLevels() {
+	const levels = await getLevelRecords();
+	return { levels };
 }

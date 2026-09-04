@@ -1,6 +1,7 @@
 import {
 	createDepartment as createDepartmentName,
 	findDepartmentById,
+	getDepartments as getDepartmentRecords,
 } from "../models/department.model.js";
 
 function fail(message, statusCode) {
@@ -16,4 +17,9 @@ export async function createDepartment({ name }) {
 
 	const data = await createDepartmentName({ name });
 	return { data };
+}
+
+export async function getDepartments() {
+	const departments = await getDepartmentRecords();
+	return { departments };
 }

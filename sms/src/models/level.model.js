@@ -11,3 +11,7 @@ export async function findLevelByName({ name }) {
 export async function findLevelByIdById({ id }) {
 	return prisma.level.findUnique({ where: { id } });
 }
+
+export async function getLevels() {
+	return prisma.level.findMany();
+}

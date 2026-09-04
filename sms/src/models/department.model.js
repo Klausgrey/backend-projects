@@ -11,3 +11,7 @@ export async function findDepartmentById({ name }) {
 export async function findDepartmentByIdById({ id }) {
 	return prisma.department.findUnique({ where: { id } });
 }
+
+export async function getDepartments() {
+	return prisma.department.findMany();
+}

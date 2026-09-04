@@ -1,4 +1,4 @@
-import { createStudent as createStudentRecord } from "../models/student.model.js";
+import { createStudent as createStudentRecord } from "../service/student.service.js";
 import { sendSuccess } from "../utils/response.js";
 
 export async function createStudent(req, res, next) {

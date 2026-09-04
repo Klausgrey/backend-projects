@@ -1,5 +1,5 @@
 import { createStudent as createStudentRecord } from "../models/student.model.js";
-import { findUserbyEmail } from "./user.model.js";
+import { findUserbyEmail } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 
 function fail(message, statusCode) {
@@ -8,7 +8,14 @@ function fail(message, statusCode) {
 	throw err;
 }
 
-export async function createStudent({ email, password, firstName, lastName }) {
+export async function createStudent({
+	email,
+	password,
+	firstName,
+	lastName,
+	department_id,
+	level_id,
+}) {
 	const isExisting = await findUserbyEmail({ email });
 	if (isExisting) fail("this email already exisits", 409);
 
@@ -19,6 +26,8 @@ export async function createStudent({ email, password, firstName, lastName }) {
 		hashedPassword,
 		firstName,
 		lastName,
+		department_id,
+		level_id,
 	});
 
 	delete user.hashedPassword;

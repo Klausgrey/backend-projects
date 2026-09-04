@@ -1,4 +1,4 @@
-import { createLevel } from "../controllers/level.controller.js";
+import { createLevel, getLevels } from "../controllers/level.controller.js";
 import levelSchema from "../validators/level.validator.js";
 import validate from "../middleware/validate.js";
 import { authenticate } from "../middleware/authenticate.js";
@@ -14,5 +14,6 @@ router.post(
 	validate(levelSchema),
 	createLevel,
 );
+router.get("/level", getLevels);
 
 export default router;

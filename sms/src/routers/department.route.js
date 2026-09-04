@@ -1,4 +1,7 @@
-import { department } from "../controllers/department.controller.js";
+import {
+	department,
+	getDepartments,
+} from "../controllers/department.controller.js";
 import departmentSchema from "../validators/department.validator.js";
 import validate from "../middleware/validate.js";
 import { authenticate } from "../middleware/authenticate.js";
@@ -14,5 +17,6 @@ router.post(
 	validate(departmentSchema),
 	department,
 );
+router.get("/department", getDepartments);
 
 export default router;
