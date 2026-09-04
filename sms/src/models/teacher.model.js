@@ -2,17 +2,18 @@ import prisma from "../config/prisma.js";
 
 export async function createTeacher({
 	email,
-	hashedpassword,
+	hashedPassword,
 	firstName,
-	LastName,
+	lastName,
 }) {
 	const result = await prisma.$transaction(async (tx) => {
 		const user = await tx.user.create({
 			data: {
 				email,
-				hashedpassword,
+				hashedPassword,
 				firstName,
-				LastName,
+				lastName,
+				role: "TEACHER"
 			},
 		});
 
