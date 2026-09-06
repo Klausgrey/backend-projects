@@ -4,7 +4,7 @@ export async function createDepartment({ name }) {
 	return prisma.department.create({ data: { name } });
 }
 
-export async function findDepartmentById({ name }) {
+export async function findDepartmentByName({ name }) {
 	return prisma.department.findFirst({ where: { name } });
 }
 
