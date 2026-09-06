@@ -9,6 +9,7 @@ import levelRoute from "./routers/level.route.js";
 import studentRoute from "./routers/student.route.js";
 import teacherRoute from "./routers/teacher.route.js";
 import academicSessionRoute from "./routers/academicSession.route.js";
+import semesterRoute from "./routers/semester.route.js";
 
 const app = express();
 app.use(express.json());
@@ -20,7 +21,7 @@ app.use("/api", levelRoute);
 app.use("/api", studentRoute);
 app.use("/api", teacherRoute);
 app.use("/api", academicSessionRoute);
-
+app.use("/api", semesterRoute);
 
 app.get("/health", async (_req, res) => {
 	return sendSuccess(res, {

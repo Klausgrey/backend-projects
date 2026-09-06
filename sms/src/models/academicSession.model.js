@@ -11,3 +11,7 @@ export async function getAcademicSession() {
 export async function findAcademicSessionByName({ name }) {
 	return prisma.academicSession.findFirst({ where: { name } });
 }
+
+export async function findAcademicSessionById({ id }) {
+	return prisma.academicSession.findUnique({ where: { id } });
+}
