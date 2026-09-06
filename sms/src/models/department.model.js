@@ -8,7 +8,7 @@ export async function findDepartmentByName({ name }) {
 	return prisma.department.findFirst({ where: { name } });
 }
 
-export async function findDepartmentByIdById({ id }) {
+export async function findDepartmentById({ id }) {
 	return prisma.department.findUnique({ where: { id } });
 }
 

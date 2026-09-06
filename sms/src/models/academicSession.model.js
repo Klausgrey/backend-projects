@@ -9,5 +9,5 @@ export async function getAcademicSession() {
 }
 
 export async function findAcademicSessionByName({ name }) {
-	return prisma.academicSession.findFirst({ name });
+	return prisma.academicSession.findFirst({ where: { name } });
 }

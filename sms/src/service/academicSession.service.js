@@ -10,10 +10,10 @@ export async function createAcademicSessionServiceService({ name }) {
 	if (result) fail("this session already exists", 409);
 
 	const data = await createAcademicSession({ name });
-	return { data };
+	return data;
 }
 
 export async function getAcademicSessionService() {
 	const result = await getAcademicSession();
-	return { result };
+	return result;
 }

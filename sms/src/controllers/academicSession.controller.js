@@ -1,7 +1,7 @@
 import {
 	createAcademicSessionServiceService,
 	getAcademicSessionService,
-} from "../service/academicSession.service";
+} from "../service/academicSession.service.js";
 import { sendSuccess } from "../utils/response.js";
 
 export async function createAcademicSessionController(req, res, next) {

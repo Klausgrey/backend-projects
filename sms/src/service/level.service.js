@@ -18,7 +18,7 @@ export async function createLevel({ name }) {
 
 	const data = await createLevelRecord({ name });
 
-	return { data };
+	return data;
 }
 
 export async function getLevels() {
