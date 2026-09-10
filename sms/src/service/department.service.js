@@ -1,6 +1,6 @@
 import {
 	createDepartment as createDepartmentName,
-	findDepartmentById,
+	findDepartmentByName,
 	getDepartments as getDepartmentRecords,
 } from "../models/department.model.js";
 
@@ -12,7 +12,7 @@ function fail(message, statusCode) {
 
 export async function createDepartment({ name }) {
 	if (!name) fail("there was no nane provided", 400);
-	const isExisting = await findDepartmentById({ name });
+	const isExisting = await findDepartmentByName({ name });
 	if (isExisting) fail("this department already exists", 409);
 
 	const data = await createDepartmentName({ name });

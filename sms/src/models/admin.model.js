@@ -2,13 +2,13 @@ import prisma from "../config/prisma.js";
 
 export async function createAdmin({
 	email,
-	hashedpassword,
+	hashedPassword,
 	firstName,
-	LastName,
+	lastName,
 }) {
 	const result = prisma.$transaction(async (tx) => {
 		const user = await tx.user.create({
-			data: { email, hashedpassword, firstName, LastName, role: "ADMIN" },
+			data: { email, hashedPassword, firstName, lastName, role: "ADMIN" },
 		});
 
 		const admin = await tx.admin.create({
