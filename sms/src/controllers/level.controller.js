@@ -1,7 +1,7 @@
 import {
 	createLevel as createLevelRecord,
 	getLevels as getLevelRecords,
-} from "../models/level.model.js";
+} from "../service/level.service.js";
 import { sendSuccess } from "../utils/response.js";
 
 export async function createLevel(req, res, next) {

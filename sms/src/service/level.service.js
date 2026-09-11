@@ -23,5 +23,5 @@ export async function createLevel({ name }) {
 
 export async function getLevels() {
 	const levels = await getLevelRecords();
-	return { levels };
+	return levels;
 }
