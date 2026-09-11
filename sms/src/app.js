@@ -10,10 +10,11 @@ import studentRoute from "./routers/student.route.js";
 import teacherRoute from "./routers/teacher.route.js";
 import academicSessionRoute from "./routers/academicSession.route.js";
 import semesterRoute from "./routers/semester.route.js";
+import coureseRoute from "./routers/course.route.js";
 
 const app = express();
-app.use(express.json());
 
+app.use(express.json());
 app.use("/api", authRoute);
 app.use("/api", adminRoute);
 app.use("/api", departmentRoute);
@@ -22,6 +23,7 @@ app.use("/api", studentRoute);
 app.use("/api", teacherRoute);
 app.use("/api", academicSessionRoute);
 app.use("/api", semesterRoute);
+app.use("/api", coureseRoute);
 
 app.get("/health", async (_req, res) => {
 	return sendSuccess(res, {

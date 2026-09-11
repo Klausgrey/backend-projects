@@ -12,4 +12,5 @@ const userSchema = Joi.object({
 	lastName: Joi.string().required(),
 });
 
+// const capacitySchema =
 export default userSchema;
