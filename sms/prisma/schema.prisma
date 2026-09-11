@@ -86,6 +86,7 @@ model Department {
 
 model Courses {
   id String @id @default(uuid())
+  name String
   department_id String
   level_id String
   capacity Int
@@ -96,6 +97,8 @@ model Courses {
 
   department Department @relation(fields: [department_id], references: [id])
   level Level @relation(fields: [level_id], references: [id])
+
+  @@unique([name, department_id, level_id])
 
 }
 

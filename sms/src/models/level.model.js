@@ -8,7 +8,7 @@ export async function findLevelByName({ name }) {
 	return prisma.level.findFirst({ where: { name } });
 }
 
-export async function findLevelByIdById({ id }) {
+export async function findLevelById({ id }) {
 	return prisma.level.findUnique({ where: { id } });
 }
 
