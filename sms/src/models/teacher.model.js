@@ -25,5 +25,5 @@ export async function createTeacher({
 }
 
 export async function findTeacherByIdModel({ teacherId }) {
-	return prisma.courses.findUnique({ where: { teacher_id: teacherId } });
+	return prisma.teacher.findUnique({ where: { id: teacherId } });
 }
