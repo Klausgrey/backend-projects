@@ -11,4 +11,16 @@ export async function createCourseModel({
 	});
 }
 
-// export async function
+export async function findCourseByNameDeptLevelModel({
+	name,
+	department_id: departmentId,
+	level_id: levelId,
+}) {
+	return prisma.courses.findFirst({
+		where: { name, department_id: departmentId, level_id: levelId },
+	});
+}
+
+export async function findCourseByIdModel({ courseId }) {
+	return prisma.courses.findUnique({ where: { course_id: courseId } });
+}

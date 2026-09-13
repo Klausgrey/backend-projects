@@ -1,4 +1,7 @@
-import { createCourseModel } from "../models/course.model.js";
+import {
+	createCourseModel,
+	findCourseByNameDeptLevelModel,
+} from "../models/course.model.js";
 import { findDepartmentById } from "../models/department.model.js";
 import { findLevelById } from "../models/level.model.js";
 import { fail } from "../utils/helper.js";
@@ -14,6 +17,13 @@ export async function createCourseService({
 	if (!department) fail("this department does not exists", 404);
 	const level = await findLevelById({ id: levelId });
 	if (!level) fail("this level does not exists", 404);
+	const isExisting = await findCourseByNameDeptLevelModel({
+		name,
+		departmentId,
+		levelId,
+	});
+	if (isExisting)
+		fail("this course already exists in this department and level", 409);
 
 	const data = await createCourseModel({
 		name,
@@ -21,5 +31,5 @@ export async function createCourseService({
 		levelId,
 		capacity,
 	});
-	return { data };
+	return data;
 }

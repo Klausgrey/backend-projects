@@ -13,7 +13,7 @@ export async function createTeacher({
 				hashedPassword,
 				firstName,
 				lastName,
-				role: "TEACHER"
+				role: "TEACHER",
 			},
 		});
 
@@ -22,4 +22,8 @@ export async function createTeacher({
 		return { user, teacher };
 	});
 	return result;
+}
+
+export async function findTeacherByIdModel({ teacherId }) {
+	return prisma.courses.findUnique({ where: { teacher_id: teacherId } });
 }
