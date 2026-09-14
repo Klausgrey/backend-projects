@@ -18,6 +18,9 @@ export async function authenticate(req, res, next) {
 		req.user = user;
 		next();
 	} catch (err) {
+		if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
+			return sendError(res, 401, "invalid or expired token");
+		}
 		next(err);
 	}
 }

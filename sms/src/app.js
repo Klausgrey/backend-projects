@@ -27,14 +27,13 @@ app.use("/api", semesterRoute);
 app.use("/api", coureseRoute);
 app.use("/api", courseTeacherRoute);
 
-app.get("/health", async (_req, res) => {
-	return sendSuccess(res, {
-		message: "This is a health check no need to worry",
-	});
+app.get("/api/health", async (_req, res) => {
+	const data = "FALSE ALARM"
+	return sendSuccess(res, 200, data, "This is a health check no need to worry");
 });
 
 app.use((_req, res) => {
-	return sendError(res, { statusCode: 404, message: "end point not found" });
+	return sendError(res, 404, "end point not found");
 });
 
 app.use(errorHandler);

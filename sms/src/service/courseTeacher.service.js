@@ -10,7 +10,7 @@ export async function createCourseTeacherService({ teacherId, courseId }) {
 	const teacher = await findTeacherByIdModel({ teacherId });
 	if (!teacher) fail("teacher does not exits", 404);
 	const course = await findCourseByIdModel({ courseId });
-	if (!course) fail("teacher does not exits", 404);
+	if (!course) fail("course does not exits", 404);
 	const isExisting = await findCourseTeacherLink({ teacherId, courseId });
 	if (isExisting) fail("duplicate", 409);
 

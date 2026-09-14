@@ -8,6 +8,6 @@ export async function createCourseTeacherModel({ teacherId, courseId }) {
 
 export async function findCourseTeacherLink({ teacherId, courseId }) {
 	return prisma.courseTeacher.findFirst({
-		where: { id: teacherId, id: courseId },
+		where: { teacher_id: teacherId, course_id: courseId },
 	});
 }
