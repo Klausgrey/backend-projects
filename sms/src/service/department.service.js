@@ -21,5 +21,5 @@ export async function createDepartment({ name }) {
 
 export async function getDepartments() {
 	const departments = await getDepartmentRecords();
-	return { departments };
+	return departments;
 }

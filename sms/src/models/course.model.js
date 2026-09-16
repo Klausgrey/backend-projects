@@ -24,3 +24,7 @@ export async function findCourseByNameDeptLevelModel({
 export async function findCourseByIdModel({ courseId }) {
 	return prisma.courses.findUnique({ where: { id: courseId } });
 }
+
+export async function getCourses() {
+	return prisma.courses.findMany();
+}

@@ -1,6 +1,7 @@
 import express from "express";
 import { sendSuccess, sendError } from "./utils/response.js";
 import { errorHandler } from "./middleware/error.handler.js";
+import cors from "cors";
 
 import authRoute from "./routers/auth.route.js";
 import adminRoute from "./routers/admin.route.js";
@@ -14,6 +15,7 @@ import coureseRoute from "./routers/course.route.js";
 import courseTeacherRoute from "./routers/courseTeacher.route.js";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.use("/api", authRoute);
@@ -28,7 +30,7 @@ app.use("/api", coureseRoute);
 app.use("/api", courseTeacherRoute);
 
 app.get("/api/health", async (_req, res) => {
-	const data = "FALSE ALARM"
+	const data = "FALSE ALARM";
 	return sendSuccess(res, 200, data, "This is a health check no need to worry");
 });
 

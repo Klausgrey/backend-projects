@@ -1,4 +1,7 @@
-import { createTeacher as createTeacherRecord } from "../models/teacher.model.js";
+import {
+	createTeacher as createTeacherRecord,
+	getTeachers as getTeacherRecords,
+} from "../models/teacher.model.js";
 import { findUserbyEmail } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 
@@ -23,4 +26,9 @@ export async function createTeacher({ email, password, firstName, lastName }) {
 
 	delete user.hashedPassword;
 	return { user, teacher };
+}
+
+export async function getTeachers() {
+	const teachers = await getTeacherRecords();
+	return teachers;
 }

@@ -1,4 +1,7 @@
-import { createCourseController } from "../controllers/course.controller.js";
+import {
+	createCourseController,
+	getCourses,
+} from "../controllers/course.controller.js";
 import { requireRole } from "../middleware/requireRoles.js";
 import { authenticate } from "../middleware/authenticate.js";
 
@@ -12,4 +15,5 @@ router.post(
 	createCourseController,
 );
 
+router.get("/courses", authenticate, requireRole("ADMIN"), getCourses);
 export default router;

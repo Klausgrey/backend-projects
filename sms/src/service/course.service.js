@@ -1,6 +1,7 @@
 import {
 	createCourseModel,
 	findCourseByNameDeptLevelModel,
+	getCourses as getCourseRecords,
 } from "../models/course.model.js";
 import { findDepartmentById } from "../models/department.model.js";
 import { findLevelById } from "../models/level.model.js";
@@ -32,4 +33,9 @@ export async function createCourseService({
 		capacity,
 	});
 	return data;
+}
+
+export async function getCourses() {
+	const courses = await getCourseRecords();
+	return courses;
 }

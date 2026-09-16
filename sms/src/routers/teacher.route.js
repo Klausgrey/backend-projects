@@ -1,4 +1,7 @@
-import { createTeacher } from "../controllers/teacher.controller.js";
+import {
+	createTeacher,
+	getTeachers,
+} from "../controllers/teacher.controller.js";
 import userSchema from "../validators/user.validator.js";
 import validate from "../middleware/validate.js";
 import { authenticate } from "../middleware/authenticate.js";
@@ -14,5 +17,5 @@ router.post(
 	validate(userSchema),
 	createTeacher,
 );
-
+router.get("/teacher", authenticate, requireRole("ADMIN"), getTeachers);
 export default router;
