@@ -13,7 +13,7 @@ export async function createTeacher(req, res, next) {
 export async function getTeachers(req, res, next) {
 	try {
 		const data = await getTeacherRecords(req.body);
-		return sendSuccess(res, 200, data, "all departments loaded");
+		return sendSuccess(res, 200, data, "all teacher loaded");
 	} catch (err) {
 		next(err);
 	}

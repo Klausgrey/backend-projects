@@ -29,5 +29,7 @@ export async function findTeacherByIdModel({ teacherId }) {
 }
 
 export async function getTeachers() {
-	return prisma.teacher.findMany();
+	const teachers = await prisma.teacher.findMany({ include: { user: true } });
+	teachers.forEach((t) => delete t.user.hashedPassword);
+	return teachers;
 }

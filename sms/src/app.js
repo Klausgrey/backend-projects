@@ -13,6 +13,7 @@ import academicSessionRoute from "./routers/academicSession.route.js";
 import semesterRoute from "./routers/semester.route.js";
 import coureseRoute from "./routers/course.route.js";
 import courseTeacherRoute from "./routers/courseTeacher.route.js";
+import enrollmentRoute from "./routers/enrollment.route.js";
 
 const app = express();
 app.use(cors());
@@ -28,6 +29,7 @@ app.use("/api", academicSessionRoute);
 app.use("/api", semesterRoute);
 app.use("/api", coureseRoute);
 app.use("/api", courseTeacherRoute);
+app.use("/api", enrollmentRoute);
 
 app.get("/api/health", async (_req, res) => {
 	const data = "FALSE ALARM";
