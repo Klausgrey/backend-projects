@@ -15,7 +15,7 @@ export async function createEnrollmentService({
 		courseId,
 		semesterId,
 	});
-	if (isExisting) fail("this enrolllment already exists", 409);
+	if (isExisting) fail("this enrollment already exists", 409);
 
 	const enrolllment = await createEnrollmentModel({
 		studentId,
