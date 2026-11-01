@@ -1,2 +1,3 @@
 import app from './app.js'
-app.listen(3000, () => {console.log('server is running...')})
+import "dotenv/config.js"
+app.listen(process.env.PORT || 5000, () => {console.log('server is running...')})
