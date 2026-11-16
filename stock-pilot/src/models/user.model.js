@@ -40,7 +40,7 @@ export async function createUsers({
 	return user;
 }
 
-export async function loginUser({ email, password }) {
+export async function loginUser({ email, passwordHash }) {
 	const {
 		rows: [user],
 	} = await pool.query(
@@ -53,8 +53,8 @@ export async function loginUser({ email, password }) {
 	);
 
 	if (!user) fail("this users email is registered on the database", 404);
-	const password = await bcrypt.compare(password, user.password_hash);
-	if (!password) fail("incorrect password", 400);
+	const isValid = await bcrypt.compare(passwordHash, user.password_hash);
+	if (!isValid) fail("incorrect password", 400);
 
 	const payload = {
 		userId: user.id,
@@ -65,5 +65,6 @@ export async function loginUser({ email, password }) {
 		expiresIn: process.env.JWT_EXPIRES_IN,
 	});
 
+	delete user.password_hash
 	return { user, token };
 }
