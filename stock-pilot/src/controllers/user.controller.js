@@ -1,4 +1,9 @@
-import { createUsers, loginUser } from "../models/user.model.js";
+import {
+	createUsers,
+	loginUser,
+	getCurrentUser,
+	changeUserPassword,
+} from "../models/user.model.js";
 
 export async function register(req, res, next) {
 	try {
@@ -12,9 +17,29 @@ export async function register(req, res, next) {
 export async function login(req, res, next) {
 	try {
 		const data = await loginUser(req.body);
-		res
-			.status(200)
-			.json({ message: "user signed-in successfully", data });
+		res.status(200).json({ message: "user signed-in successfully", data });
+	} catch (error) {
+		next(error);
+	}
+}
+
+export async function getMe(req, res, next) {
+	try {
+		const data = await getCurrentUser({ userId: req.user.id });
+		res.status(200).json({ message: "current user", data });
+	} catch (error) {
+		next(error);
+	}
+}
+
+export async function changePassword(req, res, next) {
+	try {
+		await changeUserPassword({
+			userId: req.user.id,
+			currentPassword: req.body.currentPassword,
+			newPassword: req.body.newPassword,
+		});
+		res.status(200).json({ message: "password changed successfully" });
 	} catch (error) {
 		next(error);
 	}

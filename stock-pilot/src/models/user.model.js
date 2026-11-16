@@ -65,6 +65,63 @@ export async function loginUser({ email, passwordHash }) {
 		expiresIn: process.env.JWT_EXPIRES_IN,
 	});
 
-	delete user.password_hash
-	return { user, token };
+	delete user.password_hash;
+	return { token, user };
+}
+
+export async function getCurrentUser({ userId }) {
+	const {
+		rows: [user],
+	} = await pool.query(
+		`
+		select id, first_name, last_name, email, is_active
+		from users
+		where id = $1
+		`,
+		[userId],
+	);
+
+	if (!user) fail("user does not exists", 401);
+
+	return user;
+}
+
+export async function changeUserPassword({
+	userId,
+	currentPassword,
+	newPassword,
+}) {
+	const {
+		rows: [user],
+	} = await pool.query(
+		`
+		select id, password_hash, is_active
+		from users
+		where id = $1
+		`,
+		[userId],
+	);
+
+	if (!user.is_active) {
+		fail("Account is disabled", 403);
+	}
+
+	if (!user) fail("unknown user", 404);
+
+	const match = await bcrypt.compare(currentPassword, user.password_hash);
+	if (!match) fail("current password is incorrect", 400);
+
+	if (currentPassword === newPassword)
+		fail("New password must be different from current password", 400);
+
+	const passwordHash = await bcrypt.hash(newPassword, 10);
+
+	await pool.query(
+		`
+		update users
+		set password_hash = $1
+		where id = $2
+		`,
+		[passwordHash, userId],
+	);
 }
