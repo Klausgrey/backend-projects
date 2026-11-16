@@ -1,5 +1,7 @@
 import pool from "../config/db.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 function fail(message, statusCode) {
 	const error = new Error(message);
@@ -26,7 +28,7 @@ export async function createUsers({
 	if (existing) fail("this users email already exists", 409);
 
 	const {
-		rows: [users],
+		rows: [user],
 	} = await pool.query(
 		`insert into users
 		(first_name, last_name, email, password_hash, phone_number)
@@ -34,6 +36,34 @@ export async function createUsers({
 		[firstName, lastName, email, password, phoneNumber],
 	);
 
-	delete users.password_hash;
-	return users;
+	delete user.password_hash;
+	return user;
+}
+
+export async function loginUser({ email, password }) {
+	const {
+		rows: [user],
+	} = await pool.query(
+		`
+		select id, email, password_hash, role
+		from users
+		where email = $1
+		`,
+		[email],
+	);
+
+	if (!user) fail("this users email is registered on the database", 404);
+	const password = await bcrypt.compare(password, user.password_hash);
+	if (!password) fail("incorrect password", 400);
+
+	const payload = {
+		userId: user.id,
+		role: user.role,
+	};
+
+	const token = jwt.sign(payload, process.env.JWT_SECRET, {
+		expiresIn: process.env.JWT_EXPIRES_IN,
+	});
+
+	return { user, token };
 }
