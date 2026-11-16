@@ -1,18 +1,30 @@
 -- Active: 1791226795682@@127.0.0.1@5432@stock_pilot
 create DATABASE stock_pilot
 
+drop schema public cascade;
+
+select column_name
+from information_schema.columns
+where
+    table_name = 'users';
+
+create schema public;
+
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     first_name VARCHAR(150) NOT NULL,
     last_name VARCHAR(150) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
+    phone_number VARCHAR(15) not NULL,
     role VARCHAR(10) NOT NULL DEFAULT 'staff',
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT check_user_role CHECK (role IN ('admin', 'staff'))
 );
+drop table users;
+alter table users add phone_number VARCHAR(15)
 
 CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
