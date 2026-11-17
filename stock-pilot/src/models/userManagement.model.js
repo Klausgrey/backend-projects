@@ -1,7 +1,7 @@
 import pool from "../config/db.js";
 import { fail } from "../helpers/errors.js";
 
-async function findUserBuId(userId) {
+async function findUserById(userId) {
 	const {
 		rows: [user],
 	} = await pool.query(
@@ -29,9 +29,9 @@ export async function getAllUsers() {
 }
 
 export async function getUserById(userId) {
-	const user = await findUserBuId(userId);
-	if (!user) fail("this this userId does not exists", 404);
+	const user = await findUserById(userId);
+	if (!user) fail("this userId does not exists", 404);
 
-	delete user.passsword_hash;
+	delete user.password_hash;
 	return user;
 }
