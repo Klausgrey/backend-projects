@@ -126,3 +126,17 @@ CREATE TABLE IF NOT EXISTS stock_movements (
     ),
     CONSTRAINT check_quantity_change CHECK (quantity_change != 0)
 );
+
+
+-- select
+--     id,
+--     first_name,
+--     last_name,
+--     email,
+--     role,
+--     is_active,
+--     created_at
+-- from users
+-- where
+--     role = 'staff'
+-- order by created_at desc

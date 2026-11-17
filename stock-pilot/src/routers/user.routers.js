@@ -13,8 +13,8 @@ import {
 	changePasswordSchema,
 } from "../validators/auth.validator.js";
 
-import express from "express";
-const router = express.Router();
+import { Router } from "express";
+const router = Router();
 
 router.post(
 	"/admin/register",
