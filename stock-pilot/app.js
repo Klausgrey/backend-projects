@@ -12,6 +12,7 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api", userRouter);
 app.use("/api", userManagement);
+
 app.use(errorHandler);
 
 export default app;
