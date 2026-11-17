@@ -8,7 +8,7 @@ export const registerSchema = Joi.object({
 		.required()
 		.min(8)
 		.max(50)
-		.pattern(/^.{8,16}$/),
+		.pattern(/^.{8,}$/),
 	phoneNumber: Joi.string()
 		.pattern(/^(0|\+?234)[7-9][0-1][0-9]{8}/)
 		.required(),
@@ -20,7 +20,7 @@ export const loginSchema = Joi.object({
 		.required()
 		.min(8)
 		.max(50)
-		.pattern(/^.{8,16}$/),
+		.pattern(/^.{8,}$/),
 });
 
 export const changePasswordSchema = Joi.object({
@@ -28,11 +28,11 @@ export const changePasswordSchema = Joi.object({
 		.required()
 		.min(8)
 		.max(15)
-		.pattern(/^.{8,16}$/),
+		.pattern(/^.{8,}$/),
 
 	newPassword: Joi.string()
 		.required()
 		.min(8)
 		.max(15)
-		.pattern(/^.{8,16}$/),
+		.pattern(/^.{8,}$/),
 });

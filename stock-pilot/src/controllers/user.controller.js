@@ -25,7 +25,7 @@ export async function login(req, res, next) {
 
 export async function getMe(req, res, next) {
 	try {
-		const data = await getCurrentUser({ userId: req.user.id });
+		const data = await getCurrentUser({ userId: req.user.userId });
 		res.status(200).json({ message: "current user", data });
 	} catch (error) {
 		next(error);
@@ -35,7 +35,7 @@ export async function getMe(req, res, next) {
 export async function changePassword(req, res, next) {
 	try {
 		await changeUserPassword({
-			userId: req.user.id,
+			userId: req.user.userId,
 			currentPassword: req.body.currentPassword,
 			newPassword: req.body.newPassword,
 		});

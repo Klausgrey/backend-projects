@@ -45,7 +45,7 @@ export async function loginUser({ email, passwordHash }) {
 		rows: [user],
 	} = await pool.query(
 		`
-		select id, email, password_hash, role
+		select id, first_name, last_name, email, password_hash, role
 		from users
 		where email = $1
 		`,
