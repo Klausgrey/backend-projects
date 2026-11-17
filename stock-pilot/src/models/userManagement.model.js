@@ -35,3 +35,22 @@ export async function getUserById(userId) {
 	delete user.password_hash;
 	return user;
 }
+
+export async function updateUserById(userId, { firstName, lastName, email }) {
+	const user = await findUserById(userId);
+	if (!user) fail("this userId does not exist");
+
+	const updateUser = await pool.query(
+		`
+		update users
+		set first_name = coalesce($1, first_name),
+		last_name = coalesce($2, last_name),
+		email = coalesce($3, email)
+		where id = $4
+		returning id, first_name, last_name, email, role, is_active, created_at
+		`,
+		[firstName ?? null, lastName ?? null, email ?? null, userId],
+	);
+
+	return updateUser;
+}
