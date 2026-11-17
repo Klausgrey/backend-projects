@@ -1,12 +1,21 @@
 import pool from "../config/db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { fail } from "../helpers/errors.js";
 import "dotenv/config";
 
-function fail(message, statusCode) {
-	const error = new Error(message);
-	error.statusCode = statusCode;
-	throw error;
+async function findUserById(userId) {
+	const {
+		rows: [user],
+	} = await pool.query(
+		`
+		select id, first_name, password_hash, last_name, email, is_active
+		from users
+		where id = $1
+		`,
+		[userId],
+	);
+	return user;
 }
 
 export async function createUsers({
@@ -70,19 +79,9 @@ export async function loginUser({ email, passwordHash }) {
 }
 
 export async function getCurrentUser({ userId }) {
-	const {
-		rows: [user],
-	} = await pool.query(
-		`
-		select id, first_name, last_name, email, is_active
-		from users
-		where id = $1
-		`,
-		[userId],
-	);
-
+	const user = await findUserById(userId);
 	if (!user) fail("user does not exists", 401);
-
+	delete user.password_hash;
 	return user;
 }
 
@@ -91,16 +90,7 @@ export async function changeUserPassword({
 	currentPassword,
 	newPassword,
 }) {
-	const {
-		rows: [user],
-	} = await pool.query(
-		`
-		select id, password_hash, is_active
-		from users
-		where id = $1
-		`,
-		[userId],
-	);
+	const user = await findUserById(userId);
 
 	if (!user.is_active) {
 		fail("Account is disabled", 403);
@@ -124,4 +114,15 @@ export async function changeUserPassword({
 		`,
 		[passwordHash, userId],
 	);
+	// delete user.password_hash;
+}
+
+export async function logoutUser({ userId }) {
+	const user = await findUserById(userId);
+	if (!user) fail("this user does not exists", 404);
+	
+
+
+	delete user.password_hash;
+	return user;
 }
