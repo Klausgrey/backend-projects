@@ -1,8 +1,17 @@
-import { register, login } from "../controllers/user.controller.js";
-import { authorize } from "../validators/authorize.middleware.js";
+import {
+	register,
+	login,
+	getMe,
+	changePassword,
+} from "../controllers/user.controller.js";
+import { authorize } from "../middleware/authorize.middleware.js";
 import { verifyToken } from "../middleware/verifyToken.middleware.js";
 import { validator } from "../middleware/validator.middleware.js";
-import { registerSchema, loginSchema } from "../validators/auth.validator.js";
+import {
+	registerSchema,
+	loginSchema,
+	changePasswordSchema,
+} from "../validators/auth.validator.js";
 
 import express from "express";
 const router = express.Router();
@@ -15,5 +24,12 @@ router.post(
 	register,
 );
 router.post("/login", validator(loginSchema), login);
+router.get("/me", verifyToken, getMe);
+router.patch(
+	"/change-password",
+	verifyToken,
+	validator(changePasswordSchema),
+	changePassword,
+);
 
 export default router;

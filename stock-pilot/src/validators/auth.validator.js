@@ -22,3 +22,17 @@ export const loginSchema = Joi.object({
 		.max(50)
 		.pattern(/^.{8,16}$/),
 });
+
+export const changePasswordSchema = Joi.object({
+	currentPassword: Joi.string()
+		.required()
+		.min(8)
+		.max(15)
+		.pattern(/^.{8,16}$/),
+
+	newPassword: Joi.string()
+		.required()
+		.min(8)
+		.max(15)
+		.pattern(/^.{8,16}$/),
+});
