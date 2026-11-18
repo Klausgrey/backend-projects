@@ -40,17 +40,38 @@ export async function updateUserById(userId, { firstName, lastName, email }) {
 	const user = await findUserById(userId);
 	if (!user) fail("this userId does not exist");
 
-	const updateUser = await pool.query(
+	const {
+		rows: [updateUser],
+	} = await pool.query(
 		`
 		update users
 		set first_name = coalesce($1, first_name),
 		last_name = coalesce($2, last_name),
 		email = coalesce($3, email)
-		where id = $4
+		where id = $4 and role = 'staff'
 		returning id, first_name, last_name, email, role, is_active, created_at
 		`,
 		[firstName ?? null, lastName ?? null, email ?? null, userId],
 	);
 
 	return updateUser;
+}
+
+export async function upadateUserStatus(userId, isActive) {
+	const user = await findUserById(userId);
+	if (!user) fail("this userId does not exist");
+
+	const {
+		rows: [updated],
+	} = await pool.query(
+		`
+		update users
+		set is_active = $1
+		where id = $2 and role = 'staff'
+		returning first_name, last_name, email, is_active
+		`,
+		[isActive, userId],
+	);
+
+	return updated;
 }
