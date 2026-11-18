@@ -1,4 +1,3 @@
--- Active: 1791226795682@@127.0.0.1@5432@stock_pilot
 create DATABASE stock_pilot
 
 drop schema public cascade;

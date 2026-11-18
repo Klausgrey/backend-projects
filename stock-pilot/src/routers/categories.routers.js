@@ -1,6 +1,7 @@
 import {
 	createCategory,
 	getAllCategory,
+	getCategoryById
 } from "../controllers/categories.controller.js";
 import { authorize } from "../middleware/authorize.middleware.js";
 import { createCategorySchema } from "../validators/categories.validator.js";
@@ -24,5 +25,12 @@ router.get(
 	authorize("admin", "staff"),
 	getAllCategory,
 );
+router.get(
+	"./categories/:id",
+	verifyToken,
+	authorize("admin", "staff"),
+	getCategoryById,
+);
+
 
 export default router;

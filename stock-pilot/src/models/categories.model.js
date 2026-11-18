@@ -36,3 +36,19 @@ export async function getAllCategories() {
 
 	return rows;
 }
+
+export async function getCategoriesById(id) {
+	const {
+		rows: [category],
+	} = await pool.query(
+		sql`
+		select id, name, description
+		from categories
+		where id = $1
+		`,
+		[userId],
+	);
+	if (!category) fail("there is no category with this id");
+
+	return category;
+}
