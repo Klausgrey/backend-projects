@@ -52,3 +52,29 @@ export async function getCategoriesById(id) {
 
 	return category;
 }
+
+export async function updateCategoriesById(id, name, description) {
+	const category = await pool.query(
+		sql`
+		select id
+		from categories
+		where id = $1
+		`,
+		[id],
+	);
+	if (!category) fail("this category with this id does not exists");
+
+	const {
+		rows: [updatedCategory],
+	} = await pool.query(
+		sql`update categories
+		set name = coalesce($1, name),
+		description = coalesce($2, description)
+		where id = $3
+		returning id, name, description
+		`,
+		[name ?? null, description ?? null, id],
+	);
+
+	return updatedCategory;
+}
