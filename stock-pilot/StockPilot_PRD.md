@@ -152,7 +152,7 @@ With stateless JWTs, logout only discards the client token unless token revocati
 | GET | `/users/:id` | Admin | User details |
 | PATCH | `/users/:id` | Admin | Update staff details |
 | PATCH | `/users/:id/status` | Admin | Activate/deactivate |
-| DELETE | `/users/:id` | Admin | Soft-delete/deactivate account |
+<!-- | DELETE | `/users/:id` | Admin | Soft-delete/deactivate account | -->
 
 Avoid hard deletion when historical sales refer to the user. Disabled accounts must not continue to authenticate or use previously issued tokens if the server checks current account status.
 
