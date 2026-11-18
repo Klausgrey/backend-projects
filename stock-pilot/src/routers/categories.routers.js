@@ -1,4 +1,7 @@
-import { createCategory } from "../controllers/categories.controller.js";
+import {
+	createCategory,
+	getAllCategory,
+} from "../controllers/categories.controller.js";
 import { authorize } from "../middleware/authorize.middleware.js";
 import { createCategorySchema } from "../validators/categories.validator.js";
 import { verifyToken } from "../middleware/verifyToken.middleware.js";
@@ -13,6 +16,13 @@ router.post(
 	authorize("admin"),
 	validator(createCategorySchema),
 	createCategory,
+);
+
+router.get(
+	"./categories/",
+	verifyToken,
+	authorize("admin", "staff"),
+	getAllCategory,
 );
 
 export default router;
