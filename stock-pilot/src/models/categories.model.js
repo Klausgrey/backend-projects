@@ -24,3 +24,15 @@ export async function createCategories(name, description) {
 
 	return category;
 }
+
+export async function getAllCategories() {
+	const { rows } = await pool.query(
+		sql`
+		select *
+		from categories
+		`,
+	);
+	if (rows[0] === 0) fail("there is no category created");
+
+	return rows;
+}
