@@ -1,0 +1,9 @@
+{
+	"connections": [
+		{
+			"name": "offline-schema",
+			"adapter": "json",
+			"schema": "./database/schema.sql"
+		}
+	]
+}
