@@ -3,6 +3,7 @@ import {
 	getAllCategories,
 	getCategoriesById,
 	updateCategoriesById,
+	updateCategoriesStatus,
 } from "../models/categories.model.js";
 
 export async function createCategory(req, res) {
@@ -27,4 +28,10 @@ export async function updateCategoryById(req, res) {
 	const { name, description } = req.body;
 	const data = await updateCategoriesById(req.params.id, name, description);
 	res.status(200).json({ message: "this is the updated category", data });
+}
+
+export async function updateCategoryStatus(req, res) {
+	const { isActive } = req.body;
+	const data = await updateCategoriesStatus(req.params.id, isActive);
+	res.status(200).json({ message: `${data.name} is now ${isActive}`, data });
 }

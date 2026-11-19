@@ -3,16 +3,20 @@ import {
 	getAllCategory,
 	getCategoryById,
 	updateCategoryById,
+	updateCategoryStatus,
 } from "../controllers/categories.controller.js";
 import { authorize } from "../middleware/authorize.middleware.js";
 import {
 	createCategorySchema,
 	updatecategorySchema,
+	updateCategoryStatus,
 } from "../validators/categories.validator.js";
 import { verifyToken } from "../middleware/verifyToken.middleware.js";
 import { validator } from "../middleware/validator.middleware.js";
 
 import { Router } from "express";
+import { valid } from "joi";
+import { updateUserSchema } from "../validators/userManagement.validators.js";
 const router = Router();
 
 router.post(
@@ -43,5 +47,14 @@ router.patch(
 	validator(updatecategorySchema),
 	updateCategoryById,
 );
+
+router.patch(
+	"/categories/:id/status",
+	verifyToken,
+	authorize("admiin"),
+	validator(updateUserSchema),
+	updateCategoryStatus,
+);
+
 
 export default router;

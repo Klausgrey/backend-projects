@@ -36,22 +36,22 @@ Multiple warehouses, purchase orders, payment gateway integration, full accounti
 
 ## 2. Roles and permissions
 
-| Capability | Admin | Staff |
-|---|---|---|
-| Login and view own profile | Yes | Yes |
-| Create and manage staff | Yes | No |
-| Create/edit/archive categories | Yes | No |
-| View categories | Yes | Yes |
-| Create/edit/archive products | Yes | No |
-| View products | Yes | Yes |
-| Manage suppliers | Yes | No |
-| View suppliers | Yes | Yes |
-| Receive or adjust stock | Yes | No |
-| View stock | Yes | Yes |
-| Create/update customers | Yes | Yes |
-| Record and view sales | Yes | Yes |
-| Void sales | Yes | No |
-| View dashboard and reports | Yes | No |
+| Capability                     | Admin | Staff |
+| ------------------------------ | ----- | ----- |
+| Login and view own profile     | Yes   | Yes   |
+| Create and manage staff        | Yes   | No    |
+| Create/edit/archive categories | Yes   | No    |
+| View categories                | Yes   | Yes   |
+| Create/edit/archive products   | Yes   | No    |
+| View products                  | Yes   | Yes   |
+| Manage suppliers               | Yes   | No    |
+| View suppliers                 | Yes   | Yes   |
+| Receive or adjust stock        | Yes   | No    |
+| View stock                     | Yes   | Yes   |
+| Create/update customers        | Yes   | Yes   |
+| Record and view sales          | Yes   | Yes   |
+| Void sales                     | Yes   | No    |
+| View dashboard and reports     | Yes   | No    |
 
 **Security rules:** Authentication must run before authorization. Public registration must not permit users to select `admin`; staff creation should be admin-controlled. Keep the database default role as `staff`. The admin seed script must explicitly insert role `admin`. Existing seeded staff records need a verified manual role update; `ON CONFLICT DO NOTHING` does not promote them.
 
@@ -59,17 +59,17 @@ Multiple warehouses, purchase orders, payment gateway integration, full accounti
 
 Nine planned tables:
 
-| Table | Purpose |
-|---|---|
-| `users` | Staff/admin identities and status |
-| `categories` | Product categories |
-| `products` | SKU, category, prices, current stock, reorder level |
-| `suppliers` | Supplier contact details |
-| `product_suppliers` | Many-to-many product/supplier links |
-| `customers` | Optional customer records |
-| `sales` | Sale header, cashier, customer, total, status, payment method |
-| `sale_items` | Product, quantity, historical unit price and subtotal |
-| `stock_movements` | Auditable stock changes, reasons, actor, references |
+| Table               | Purpose                                                       |
+| ------------------- | ------------------------------------------------------------- |
+| `users`             | Staff/admin identities and status                             |
+| `categories`        | Product categories                                            |
+| `products`          | SKU, category, prices, current stock, reorder level           |
+| `suppliers`         | Supplier contact details                                      |
+| `product_suppliers` | Many-to-many product/supplier links                           |
+| `customers`         | Optional customer records                                     |
+| `sales`             | Sale header, cashier, customer, total, status, payment method |
+| `sale_items`        | Product, quantity, historical unit price and subtotal         |
+| `stock_movements`   | Auditable stock changes, reasons, actor, references           |
 
 Use UUID primary keys. A category has many products; a sale has many sale items; products have many stock movements; products and suppliers have a many-to-many relationship.
 
@@ -87,9 +87,9 @@ Example error:
 
 ```json
 {
-  "success": false,
-  "message": "Insufficient stock",
-  "details": { "available": 5, "requested": 10 }
+	"success": false,
+	"message": "Insufficient stock",
+	"details": { "available": 5, "requested": 10 }
 }
 ```
 
@@ -99,22 +99,22 @@ All inputs must be validated. Use parameterized SQL, whitelist sortable fields, 
 
 ### 5.1 Authentication (5)
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/api/register` | Admin | Create staff account |
-| POST | `/api/login` | Public | Obtain JWT |
-| GET | `/api/me` | apienticated | Current user |
-| PATCH | `/api/change-password` | Authenticated | Change own password |
-| POST | `/api/logout` | Authenticated | End client session |
+| Method | Endpoint               | Access        | Purpose              |
+| ------ | ---------------------- | ------------- | -------------------- |
+| POST   | `/api/register`        | Admin         | Create staff account |
+| POST   | `/api/login`           | Public        | Obtain JWT           |
+| GET    | `/api/me`              | apienticated  | Current user         |
+| PATCH  | `/api/change-password` | Authenticated | Change own password  |
+| POST   | `/api/logout`          | Authenticated | End client session   |
 
 Example registration:
 
 ```json
 {
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john@example.com",
-  "password": "StrongPassword123!"
+	"firstName": "John",
+	"lastName": "Doe",
+	"email": "john@example.com",
+	"password": "StrongPassword123!"
 }
 ```
 
@@ -130,15 +130,15 @@ Example response:
 
 ```json
 {
-  "message": "Login successful",
-  "token": "jwt_token_here",
-  "user": {
-    "id": "user-uuid",
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john@example.com",
-    "role": "staff"
-  }
+	"message": "Login successful",
+	"token": "jwt_token_here",
+	"user": {
+		"id": "user-uuid",
+		"firstName": "John",
+		"lastName": "Doe",
+		"email": "john@example.com",
+		"role": "staff"
+	}
 }
 ```
 
@@ -146,25 +146,25 @@ With stateless JWTs, logout only discards the client token unless token revocati
 
 ### 5.2 User management (5)
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| GET | `/users` | Admin | List staff |
-| GET | `/users/:id` | Admin | User details |
-| PATCH | `/users/:id` | Admin | Update staff details |
-| PATCH | `/users/:id/status` | Admin | Activate/deactivate |
-<!-- | DELETE | `/users/:id` | Admin | Soft-delete/deactivate account | -->
+| Method | Endpoint            | Access       | Purpose              |
+| ------ | ------------------- | ------------ | -------------------- | ------------------------------ | --- |
+| GET    | `/users`            | Admin        | List staff           |
+| GET    | `/users/:id`        | Admin        | User details         |
+| PATCH  | `/users/:id`        | Admin        | Update staff details |
+| PATCH  | `/users/:id/status` | Admin        | Activate/deactivate  |
+| <!--   | DELETE              | `/users/:id` | Admin                | Soft-delete/deactivate account | --> |
 
 Avoid hard deletion when historical sales refer to the user. Disabled accounts must not continue to authenticate or use previously issued tokens if the server checks current account status.
 
 ### 5.3 Categories (5)
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/categories` | Admin | Create category |
-| GET | `/categories` | Admin, Staff | List categories |
-| GET | `/categories/:id` | Admin, Staff | Category details |
-| PATCH | `/categories/:id` | Admin | Edit category |
-| DELETE | `/categories/:id` | Admin | Delete category if permitted |
+| Method | Endpoint                 | Access       | Purpose                      |
+| ------ | ------------------------ | ------------ | ---------------------------- |
+| POST   | `/categories`            | Admin        | Create category              |
+| GET    | `/categories`            | Admin, Staff | List categories              |
+| GET    | `/categories/:id`        | Admin, Staff | Category details             |
+| PATCH  | `/categories/:id`        | Admin        | Edit category                |
+| PATCH  | `/categories/:id/status` | Admin        | Delete category if permitted |
 
 Example create:
 
@@ -176,26 +176,26 @@ Category names must be unique and nonempty. Do not delete a category with produc
 
 ### 5.4 Products (6)
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/products` | Admin | Create product |
-| GET | `/products` | Admin, Staff | List/filter products |
-| GET | `/products/:id` | Admin, Staff | Product details |
-| PATCH | `/products/:id` | Admin | Update metadata/prices |
-| DELETE | `/products/:id` | Admin | Archive product |
-| GET | `/products/low-stock` | Admin, Staff | Low-stock products |
+| Method | Endpoint              | Access       | Purpose                |
+| ------ | --------------------- | ------------ | ---------------------- |
+| POST   | `/products`           | Admin        | Create product         |
+| GET    | `/products`           | Admin, Staff | List/filter products   |
+| GET    | `/products/:id`       | Admin, Staff | Product details        |
+| PATCH  | `/products/:id`       | Admin        | Update metadata/prices |
+| DELETE | `/products/:id`       | Admin        | Archive product        |
+| GET    | `/products/low-stock` | Admin, Staff | Low-stock products     |
 
 Example create:
 
 ```json
 {
-  "name": "Samsung Galaxy A15",
-  "sku": "SAM-A15-001",
-  "categoryId": "category-uuid",
-  "description": "Samsung smartphone",
-  "costPrice": 150000,
-  "sellingPrice": 185000,
-  "reorderLevel": 5
+	"name": "Samsung Galaxy A15",
+	"sku": "SAM-A15-001",
+	"categoryId": "category-uuid",
+	"description": "Samsung smartphone",
+	"costPrice": 150000,
+	"sellingPrice": 185000,
+	"reorderLevel": 5
 }
 ```
 
@@ -205,45 +205,45 @@ New products start with zero stock; opening stock is received via inventory. SKU
 
 ### 5.5 Suppliers (7)
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/suppliers` | Admin | Create supplier |
-| GET | `/suppliers` | Admin, Staff | List suppliers |
-| GET | `/suppliers/:id` | Admin, Staff | Supplier details |
-| PATCH | `/suppliers/:id` | Admin | Update supplier |
-| DELETE | `/suppliers/:id` | Admin | Archive supplier |
-| POST | `/products/:id/suppliers` | Admin | Associate supplier with product |
-| DELETE | `/products/:id/suppliers/:supplierId` | Admin | Remove association |
+| Method | Endpoint                              | Access       | Purpose                         |
+| ------ | ------------------------------------- | ------------ | ------------------------------- |
+| POST   | `/suppliers`                          | Admin        | Create supplier                 |
+| GET    | `/suppliers`                          | Admin, Staff | List suppliers                  |
+| GET    | `/suppliers/:id`                      | Admin, Staff | Supplier details                |
+| PATCH  | `/suppliers/:id`                      | Admin        | Update supplier                 |
+| DELETE | `/suppliers/:id`                      | Admin        | Archive supplier                |
+| POST   | `/products/:id/suppliers`             | Admin        | Associate supplier with product |
+| DELETE | `/products/:id/suppliers/:supplierId` | Admin        | Remove association              |
 
 Example create:
 
 ```json
 {
-  "name": "ABC Wholesale Ltd",
-  "email": "sales@abc.example",
-  "phone": "08012345678",
-  "address": "Lagos, Nigeria"
+	"name": "ABC Wholesale Ltd",
+	"email": "sales@abc.example",
+	"phone": "08012345678",
+	"address": "Lagos, Nigeria"
 }
 ```
 
 ### 5.6 Inventory (6)
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| GET | `/inventory` | Admin, Staff | Current balances |
-| GET | `/inventory/low-stock` | Admin, Staff | Low-stock items |
-| POST | `/inventory/stock-in` | Admin | Receive stock |
-| POST | `/inventory/adjustments` | Admin | Adjust stock |
-| GET | `/inventory/movements` | Admin | Movement history |
-| GET | `/inventory/movements/:productId` | Admin | Product movements |
+| Method | Endpoint                          | Access       | Purpose           |
+| ------ | --------------------------------- | ------------ | ----------------- |
+| GET    | `/inventory`                      | Admin, Staff | Current balances  |
+| GET    | `/inventory/low-stock`            | Admin, Staff | Low-stock items   |
+| POST   | `/inventory/stock-in`             | Admin        | Receive stock     |
+| POST   | `/inventory/adjustments`          | Admin        | Adjust stock      |
+| GET    | `/inventory/movements`            | Admin        | Movement history  |
+| GET    | `/inventory/movements/:productId` | Admin        | Product movements |
 
 Stock receipt:
 
 ```json
 {
-  "productId": "product-uuid",
-  "quantity": 20,
-  "reason": "New supplier delivery"
+	"productId": "product-uuid",
+	"quantity": 20,
+	"reason": "New supplier delivery"
 }
 ```
 
@@ -251,9 +251,9 @@ Stock adjustment:
 
 ```json
 {
-  "productId": "product-uuid",
-  "quantityChange": -3,
-  "reason": "Three damaged units"
+	"productId": "product-uuid",
+	"quantityChange": -3,
+	"reason": "Three damaged units"
 }
 ```
 
@@ -261,13 +261,13 @@ Stock-in quantity must be positive. Adjustment quantity must be nonzero and cann
 
 ### 5.7 Customers (5)
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/customers` | Admin, Staff | Create customer |
-| GET | `/customers` | Admin, Staff | List customers |
-| GET | `/customers/:id` | Admin, Staff | Customer details |
-| PATCH | `/customers/:id` | Admin, Staff | Update customer |
-| DELETE | `/customers/:id` | Admin | Archive customer |
+| Method | Endpoint         | Access       | Purpose          |
+| ------ | ---------------- | ------------ | ---------------- |
+| POST   | `/customers`     | Admin, Staff | Create customer  |
+| GET    | `/customers`     | Admin, Staff | List customers   |
+| GET    | `/customers/:id` | Admin, Staff | Customer details |
+| PATCH  | `/customers/:id` | Admin, Staff | Update customer  |
+| DELETE | `/customers/:id` | Admin        | Archive customer |
 
 Example create:
 
@@ -279,24 +279,24 @@ Walk-in sales may omit `customerId`.
 
 ### 5.8 Sales (5)
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| POST | `/sales` | Admin, Staff | Record sale |
-| GET | `/sales` | Admin, Staff | List sales |
-| GET | `/sales/:id` | Admin, Staff | Sale details |
-| GET | `/sales/:id/receipt` | Admin, Staff | Receipt data |
-| POST | `/sales/:id/void` | Admin | Void sale and restore stock |
+| Method | Endpoint             | Access       | Purpose                     |
+| ------ | -------------------- | ------------ | --------------------------- |
+| POST   | `/sales`             | Admin, Staff | Record sale                 |
+| GET    | `/sales`             | Admin, Staff | List sales                  |
+| GET    | `/sales/:id`         | Admin, Staff | Sale details                |
+| GET    | `/sales/:id/receipt` | Admin, Staff | Receipt data                |
+| POST   | `/sales/:id/void`    | Admin        | Void sale and restore stock |
 
 Example sale:
 
 ```json
 {
-  "customerId": "customer-uuid",
-  "items": [
-    { "productId": "product-uuid-1", "quantity": 2 },
-    { "productId": "product-uuid-2", "quantity": 1 }
-  ],
-  "paymentMethod": "cash"
+	"customerId": "customer-uuid",
+	"items": [
+		{ "productId": "product-uuid-1", "quantity": 2 },
+		{ "productId": "product-uuid-2", "quantity": 1 }
+	],
+	"paymentMethod": "cash"
 }
 ```
 
@@ -314,24 +314,24 @@ Voiding a sale must restore quantities exactly once, create reversing movements,
 
 ### 5.9 Dashboard and reports (5)
 
-| Method | Endpoint | Access | Purpose |
-|---|---|---|---|
-| GET | `/dashboard/summary` | Admin | Overview metrics |
-| GET | `/reports/sales` | Admin | Sales report |
-| GET | `/reports/top-products` | Admin | Best-selling products |
-| GET | `/reports/low-stock` | Admin | Low-stock report |
-| GET | `/reports/inventory-value` | Admin | Inventory valuation |
+| Method | Endpoint                   | Access | Purpose               |
+| ------ | -------------------------- | ------ | --------------------- |
+| GET    | `/dashboard/summary`       | Admin  | Overview metrics      |
+| GET    | `/reports/sales`           | Admin  | Sales report          |
+| GET    | `/reports/top-products`    | Admin  | Best-selling products |
+| GET    | `/reports/low-stock`       | Admin  | Low-stock report      |
+| GET    | `/reports/inventory-value` | Admin  | Inventory valuation   |
 
 Example dashboard response (illustrative figures):
 
 ```json
 {
-  "totalProducts": 120,
-  "totalCustomers": 45,
-  "totalSales": 230,
-  "totalRevenue": 2500000,
-  "lowStockProducts": 8,
-  "inventoryValue": 4200000
+	"totalProducts": 120,
+	"totalCustomers": 45,
+	"totalSales": 230,
+	"totalRevenue": 2500000,
+	"lowStockProducts": 8,
+	"inventoryValue": 4200000
 }
 ```
 
@@ -351,37 +351,37 @@ Validate pagination, dates, and sort keys. The product `sortBy=price` example mu
 
 ## 6. Endpoint count
 
-| Module | Count |
-|---|---:|
-| Authentication | 5 |
-| Users | 5 |
-| Categories | 5 |
-| Products | 6 |
-| Suppliers | 7 |
-| Inventory | 6 |
-| Customers | 5 |
-| Sales | 5 |
-| Dashboard and reports | 5 |
-| **Total** | **49** |
+| Module                |  Count |
+| --------------------- | -----: |
+| Authentication        |      5 |
+| Users                 |      5 |
+| Categories            |      5 |
+| Products              |      6 |
+| Suppliers             |      7 |
+| Inventory             |      6 |
+| Customers             |      5 |
+| Sales                 |      5 |
+| Dashboard and reports |      5 |
+| **Total**             | **49** |
 
 ## 7. Implementation roadmap
 
-| Phase | Work | Status based on conversation |
-|---|---|---|
-| 1 | Database schema and connection | Reported complete |
-| 2 | Admin seed | Implemented; verify existing role and argument fix |
-| 3 | Registration and login | Reported complete |
-| 4 | Authentication/authorization | In progress |
-| 5 | User management | Pending |
-| 6 | Categories CRUD | Pending |
-| 7 | Products CRUD | Pending |
-| 8 | Suppliers | Pending |
-| 9 | Inventory | Pending |
-| 10 | Customers | Pending |
-| 11 | Sales | Pending |
-| 12 | Dashboard/reports | Pending |
-| 13 | Testing/API docs | Pending |
-| 14 | Frontend | Pending |
+| Phase | Work                           | Status based on conversation                       |
+| ----- | ------------------------------ | -------------------------------------------------- |
+| 1     | Database schema and connection | Reported complete                                  |
+| 2     | Admin seed                     | Implemented; verify existing role and argument fix |
+| 3     | Registration and login         | Reported complete                                  |
+| 4     | Authentication/authorization   | In progress                                        |
+| 5     | User management                | Pending                                            |
+| 6     | Categories CRUD                | Pending                                            |
+| 7     | Products CRUD                  | Pending                                            |
+| 8     | Suppliers                      | Pending                                            |
+| 9     | Inventory                      | Pending                                            |
+| 10    | Customers                      | Pending                                            |
+| 11    | Sales                          | Pending                                            |
+| 12    | Dashboard/reports              | Pending                                            |
+| 13    | Testing/API docs               | Pending                                            |
+| 14    | Frontend                       | Pending                                            |
 
 These statuses are not based on a fresh repository inspection.
 

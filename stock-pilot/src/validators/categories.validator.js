@@ -9,3 +9,7 @@ export const updatecategorySchema = Joi.object({
 	name: Joi.string().max(100).required().trim(),
 	description: Joi.string().max(500),
 });
+
+export const updateCategoryStatus = Joi.object({
+	isActive: Joi.boolean().required().strict(),
+});

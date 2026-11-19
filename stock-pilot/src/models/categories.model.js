@@ -32,7 +32,7 @@ export async function getAllCategories() {
 		from categories
 		`,
 	);
-	if (rows[0] === 0) fail("there is no category created");
+	if (rows[0] === 0) fail("there is no category created", 404);
 
 	return rows;
 }
@@ -48,7 +48,7 @@ export async function getCategoriesById(id) {
 		`,
 		[userId],
 	);
-	if (!category) fail("there is no category with this id");
+	if (!category) fail("there is no category with this id", 404);
 
 	return category;
 }
@@ -62,7 +62,7 @@ export async function updateCategoriesById(id, name, description) {
 		`,
 		[id],
 	);
-	if (!category) fail("this category with this id does not exists");
+	if (!category) fail("this category with this id does not exists", 404);
 
 	const {
 		rows: [updatedCategory],
@@ -77,4 +77,48 @@ export async function updateCategoriesById(id, name, description) {
 	);
 
 	return updatedCategory;
+}
+
+export async function updateCategoriesStatus(id, isActive) {
+	// const {
+	// 	rows: [category],
+	// } = await pool.query(
+	// 	sql`
+	// 	select c.id, p.category_id
+	// 	from categories as c
+	// 	join products as p
+	// 	on c.id = p.category_id
+	// 	where c.id = $1
+	// 	`,
+	// 	[id],
+	// );
+	// if (!category) fail("this category with this id does not exists", 404);
+	// else if (category)
+	// 	fail(
+	// 		"there is a product attached to this category and cannot be deleted",
+	// 		409,
+	// 	);
+	// else await pool.query(
+	// 	sql`
+	// 	delete from categories
+	// 	where id = $1
+	// 	`,
+	// 	[id],
+	// );
+
+	const {
+		rows: [category],
+	} = await pool.query(
+		sql`
+		update categories
+		set is_active = $1
+		where id = $2
+		returning id, name, description, is_active
+		`,
+		[isActive, id],
+	);
+
+	if (!category) fail("this category does nto exists", 404);
+
+	return category;
 }
