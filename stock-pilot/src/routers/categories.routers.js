@@ -15,7 +15,6 @@ import { verifyToken } from "../middleware/verifyToken.middleware.js";
 import { validator } from "../middleware/validator.middleware.js";
 
 import { Router } from "express";
-import { valid } from "joi";
 import { updateUserSchema } from "../validators/userManagement.validators.js";
 const router = Router();
 
