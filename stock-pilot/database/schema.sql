@@ -39,19 +39,38 @@ CREATE TABLE IF NOT EXISTS products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     category_id UUID NOT NULL REFERENCES categories (id),
     name VARCHAR(150) NOT NULL,
-    sku VARCHAR(100) NOT NULL UNIQUE, -- product unique identifier
+    -- sku VARCHAR(100) NOT NULL UNIQUE, -- product unique identifier
     description TEXT,
-    price NUMERIC(12, 2) NOT NULL,
-    stock_quantity INT NOT NULL DEFAULT 0,
-    low_stock_threshold INT NOT NULL DEFAULT 5,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    brand VARCHAR(100),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    ---
-    CONSTRAINT check_product_price CHECK (price >= 0),
-    CONSTRAINT check_stock_quantity CHECK (stock_quantity >= 0),
-    CONSTRAINT check_low_stock_threshold CHECK (low_stock_threshold >= 0) category_id UUID REFERENCES categories (id) ON DELETE RESTRICT
+    category_id UUID REFERENCES categories (id) ON DELETE RESTRICT
 );
+
+    -- price NUMERIC(12, 2) NOT NULL,
+    -- stock_quantity INT NOT NULL DEFAULT 0,
+    -- low_stock_threshold INT NOT NULL DEFAULT 5,
+    -- is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    ---
+    -- CONSTRAINT check_product_price CHECK (price >= 0),
+    -- CONSTRAINT check_stock_quantity CHECK (stock_quantity >= 0),
+    -- CONSTRAINT check_low_stock_threshold CHECK (low_stock_threshold >= 0),
+
+
+sql
+create table product_variant (
+    id uuid primary key default gen_random_uuid (),
+    product_id uuid not null REFERENCES products (id),
+    sku VARCHAR(100) NOT NULL UNIQUE, -- product unique identifier
+    attributes jsonb not null default '{}'::jsonb,
+    price numeric(12, 2) not null check (price >= 0),
+    stock_quantity INT NOT NULL DEFAULT 0 check (stock_quantiyy >= 0),
+    reorder_level integer not null default 0 check (reorder_level >= 0),
+    is_active boolean not null default ture,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+)
 
 CREATE TABLE IF NOT EXISTS suppliers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
