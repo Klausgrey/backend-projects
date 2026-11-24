@@ -9,7 +9,7 @@ import { authorize } from "../middleware/authorize.middleware.js";
 import {
 	createCategorySchema,
 	updatecategorySchema,
-	updateCategoryStatus,
+	updateCategoryStatusSchema,
 } from "../validators/categories.validator.js";
 import { verifyToken } from "../middleware/verifyToken.middleware.js";
 import { validator } from "../middleware/validator.middleware.js";
@@ -50,7 +50,7 @@ router.patch(
 	"/categories/:id/status",
 	verifyToken,
 	authorize("admiin"),
-	validator(updateUserSchema),
+	validator(updateCategoryStatusSchema),
 	updateCategoryStatus,
 );
 

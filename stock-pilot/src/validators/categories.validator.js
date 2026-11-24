@@ -10,6 +10,6 @@ export const updatecategorySchema = Joi.object({
 	description: Joi.string().max(500),
 });
 
-export const updateCategoryStatus = Joi.object({
+export const updateCategoryStatusSchema = Joi.object({
 	isActive: Joi.boolean().required().strict(),
 });

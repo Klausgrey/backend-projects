@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-function generateSku({ brand, name, attributes = {}, sequence }) {
+function generateSku({ brand, name, attributes, sequence }) {
 	const brandCode = brand ? brand.trim().slice(0, 3).toUpperCase() : "GEN";
 
 	const productWord = name
@@ -60,13 +60,13 @@ function generateSku({ brand, name, attributes = {}, sequence }) {
 }
 
 // Test it at the end with brand "Nike", name "Running Shoes", colour "black", size "large" and sequence 42. By hand I'd expect NIK-RUN-BLA-LARGE-000042
-export async function createProducts(
+export async function createProducts({
 	name,
 	categoryId,
 	description,
 	brand,
 	variants,
-) {
+}) {
 	const admin = await pool.connect();
 
 	try {
@@ -84,16 +84,16 @@ export async function createProducts(
 
 		const createVariants = [];
 		for (const variant of variants) {
-			const { rows } = admin.query(
-				`select nextval('product_sku_sequence') as number`,
-			);
+			const {
+				rows: [next],
+			} = admin.query(`select nextval('product_sku_sequence') as number`);
 			const sku = variant.sku?.trim()
 				? variant.sku.trim()
 				: generateSku({
 						name: product.name,
 						brand: product.brand,
-						attributes: variant.attributes,
-						sequence: rows[0].number,
+						attributes: variant.attributes ?? null,
+						sequence: next.number,
 					});
 
 			const {
