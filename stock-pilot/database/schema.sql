@@ -64,8 +64,8 @@ create table product_variant (
     sku VARCHAR(100) NOT NULL UNIQUE, -- product unique identifier
     attributes jsonb not null default '{}'::jsonb,
     cost_price numeric(12, 2) not null check (price >= 0),
-    selling_price numeric(12, 2) not null check (price >= 0),
     stock_quantity INT NOT NULL DEFAULT 0 check (stock_quantiyy >= 0),
+    selling_price numeric(12, 2) not null check (price >= 0),
     reorder_level integer not null default 0 check (reorder_level >= 0),
     is_active boolean not null default ture,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -152,6 +152,8 @@ CREATE TABLE IF NOT EXISTS stock_movements (
     ),
     CONSTRAINT check_quantity_change CHECK (quantity_change != 0)
 );
+
+create sequence product_sku_sequence start with 1
 
 -- select
 --     id,

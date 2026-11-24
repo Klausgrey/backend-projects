@@ -1,10 +1,65 @@
 import pool from "../config/db.js";
-import { randomBytes } from "node:crypto";
 
-function generateSku() {
-	return ``;
+function generateSku({ brand, name, attributes = {}, sequence }) {
+	const brandCode = brand ? brand.trim().slice(0, 3).toUpperCase() : "GEN";
+
+	const productWord = name
+		.trim()
+		.toUpperCase()
+		.split(/[\s-]+/)
+		.filter(Boolean);
+
+	// if (productCode.length > 1) {
+	// 	const productCode = productCode.slice(-2);
+	// 	const prod = lastTwoWords
+	// 		.map((letter) => letter.slice(0, 2))
+	// 		.join("");
+	// 	lastTwoLetters.slice(0, 3);
+	// } else {
+	// 	productCode.slice[(0, 3)];
+	// }
+
+	const productCode =
+		productWord.length > 1
+			? productWord
+					.slice(-2)
+					.map((word) => word.slice(0, 2))
+					.join("")
+					.slice(0, 3)
+			: productWord.slice(0, 3);
+	const sizeCodes = {
+		small: "S",
+		large: "L",
+		medium: "M",
+		"extra large": "XL",
+		"extra extra large": "XXL",
+	};
+	const colorCodes = {
+		blue: "BLU",
+		black: "BLK",
+		white: "WHT",
+		red: "RED",
+		green: "GRN",
+	};
+
+	const color = attributes.color?.toLowerCase();
+	const size = attributes.size?.toLowerCase();
+
+	const colorCode = color
+		? (colorCodes[color] ?? color.slice(0, 3).toUpperCase())
+		: null;
+
+	const sizeCode = size
+		? (sizeCodes[size] ?? size.slice(0, 3).toUpperCase())
+		: null;
+
+	const number = String(sequence).padStart(6, "0");
+	return [brandCode, productCode, colorCode, sizeCode, number]
+		.filter(Boolean)
+		.join("-");
 }
 
+// Test it at the end with brand "Nike", name "Running Shoes", colour "black", size "large" and sequence 42. By hand I'd expect NIK-RUN-BLA-LARGE-000042
 export async function createProducts(
 	name,
 	categoryId,
@@ -29,12 +84,17 @@ export async function createProducts(
 
 		const createVariants = [];
 		for (const variant of variants) {
-			const sku = generateSku({
-				name: product.name,
-				brand: product.brand,
-				attributes: variant.attributes,
-				sequence: "",
-			});
+			const { rows } = admin.query(
+				`select nextval('product_sku_sequence') as number`,
+			);
+			const sku = variant.sku?.trim()
+				? variant.sku.trim()
+				: generateSku({
+						name: product.name,
+						brand: product.brand,
+						attributes: variant.attributes,
+						sequence: rows[0].number,
+					});
 
 			const {
 				rows: [createVariant],
@@ -46,7 +106,7 @@ export async function createProducts(
 			`,
 				[
 					product.id,
-					variant.sku,
+					sku,
 					JSON.stringify(variant.attributes),
 					variant.costprice,
 					variant.sellingPrice,
