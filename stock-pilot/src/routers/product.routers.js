@@ -9,9 +9,9 @@ import { Router } from "express";
 const router = Router();
 
 router.post(
-	"./product",
+	"/products",
 	verifyToken,
-	validator(createProductSchema),
+	// validator(createProductSchema),
 	authorize("admin"),
 	createProduct,
 );

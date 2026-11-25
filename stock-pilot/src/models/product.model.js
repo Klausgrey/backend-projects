@@ -74,9 +74,9 @@ export async function createProducts({
 		const {
 			rows: [product],
 		} = await admin.query(
-			sql`
+			`
 		insert into products (name, category_id, description, brand)
-		values ($1,$2,$3,$4,)
+		values ($1, $2, $3, $4)
 		returning *
 			`,
 			[name, categoryId, description ?? null, brand ?? null],
@@ -86,7 +86,7 @@ export async function createProducts({
 		for (const variant of variants) {
 			const {
 				rows: [next],
-			} = admin.query(`select nextval('product_sku_sequence') as number`);
+			} = await admin.query(`select nextval('product_sku_sequence') as number`);
 			const sku = variant.sku?.trim()
 				? variant.sku.trim()
 				: generateSku({
@@ -99,9 +99,9 @@ export async function createProducts({
 			const {
 				rows: [createVariant],
 			} = await admin.query(
-				sql`
+				`
 			insert into product_variants (product_id, sku, attributes, cost_price, selling_price, stock_quantity, reorder_level)
-			values ($1,$2,$3,$4,$5,$6)
+			values ($1,$2,$3,$4,$5,$6, $7)
 			returning *
 			`,
 				[
@@ -110,6 +110,7 @@ export async function createProducts({
 					JSON.stringify(variant.attributes),
 					variant.costprice,
 					variant.sellingPrice,
+					variant.stockQuantity,
 					variant.reorderStock,
 				],
 			);
