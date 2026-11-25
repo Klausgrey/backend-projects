@@ -100,7 +100,7 @@ export async function createProducts({
 				rows: [createVariant],
 			} = await admin.query(
 				sql`
-			insert into product_variant (product_id, sku, attributes, cost_price, selling_price, stock_quantity, reorder_level)
+			insert into product_variants (product_id, sku, attributes, cost_price, selling_price, stock_quantity, reorder_level)
 			values ($1,$2,$3,$4,$5,$6)
 			returning *
 			`,
@@ -135,3 +135,55 @@ export async function createProducts({
 // 	"sellingPrice": 185000,
 // 	"reorderLevel": 5
 // }
+
+export async function getProducts({
+	name,
+	categoryId,
+	brand,
+	// sku,
+	// color,
+	// size,
+	page,
+	limit,
+}) {
+	// const filter = {};
+	// if (name) filter.name = name;
+	// if (categoryId) filter.categoryId = categoryId;
+	// if (brand) filter.brand = brand;
+	// if (color) filter.color = color;
+	// if (size) filter.size = size;
+	// if (sku) filter.sku = sku;
+
+	// const page = pages ? parseInt(pages, 10) : 1;
+	// const limit = limits ? parseInt(limits, 10) : 10;
+
+	const pageNumber = Math.max(1, parseInt(page, 10) || 1);
+	const pageSize = Math.min(100, Math.max(1, parseInt(limit, 10) || 10));
+	const skip = (pageNumber - 1) * pageSize;
+
+	const { rows } = await pool.query(
+		sql`
+		-- select p.id,
+		-- p.name,
+		-- p.category_id,
+		-- p.brand,
+		-- pv.product_id,
+		-- pv.sku,
+		-- pv.attributes->>'color'
+		-- from products p
+		-- left join product_variants pv
+		-- on p.id = pv.product_id
+
+		select *
+		from products
+		where ($1::text is null or name ilike '%' || '$1' || '%')
+		and ($2::uuid is null or category_id = $2)
+		and ($3::text is null or brand = $3)
+		order by created_at desc
+		limit $4 offset $5
+		`,
+		[name ?? null, categoryId ?? null, brand ?? null, pageSize, skip],
+	);
+
+	return rows;
+}

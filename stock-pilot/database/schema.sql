@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS products (
 
 
 sql
-create table product_variant (
+create table product_variants (
     id uuid primary key default gen_random_uuid (),
     product_id uuid not null REFERENCES products (id),
     sku VARCHAR(100) NOT NULL UNIQUE, -- product unique identifier
