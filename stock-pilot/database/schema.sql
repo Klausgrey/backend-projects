@@ -1,3 +1,4 @@
+-- Active: 1795603082584@@127.0.0.1@5432@stock_pilot
 create DATABASE stock_pilot
 
 drop schema public cascade;
@@ -31,20 +32,20 @@ CREATE TABLE categories (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
-    is_active not null DEFAULT true,
+    is_active BOOLEAN not null DEFAULT true,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     name VARCHAR(150) NOT NULL,
-    category_id UUID NOT NULL REFERENCES categories (id),
+    category_id UUID NOT NULL REFERENCES categories (id) ON DELETE RESTRICT,
     -- sku VARCHAR(100) NOT NULL UNIQUE, -- product unique identifier
     description TEXT,
     brand VARCHAR(100),
-    is_active BOOLEAN NOT NULL DEFAULT TRUE created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    category_id UUID REFERENCES categories (id) ON DELETE RESTRICT
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- price NUMERIC(12, 2) NOT NULL,
@@ -57,17 +58,16 @@ CREATE TABLE IF NOT EXISTS products (
 -- CONSTRAINT check_low_stock_threshold CHECK (low_stock_threshold >= 0),
 
 
-sql
 create table product_variants (
     id uuid primary key default gen_random_uuid (),
     product_id uuid not null REFERENCES products (id),
     sku VARCHAR(100) NOT NULL UNIQUE, -- product unique identifier
     attributes jsonb not null default '{}'::jsonb,
-    cost_price numeric(12, 2) not null check (price >= 0),
-    stock_quantity INT NOT NULL DEFAULT 0 check (stock_quantiyy >= 0),
-    selling_price numeric(12, 2) not null check (price >= 0),
+    cost_price numeric(12, 2) not null check (cost_price >= 0),
+    stock_quantity INT NOT NULL DEFAULT 0 check (stock_quantity >= 0),
+    selling_price numeric(12, 2) not null check (selling_price >= 0),
     reorder_level integer not null default 0 check (reorder_level >= 0),
-    is_active boolean not null default ture,
+    is_active boolean not null default true,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 

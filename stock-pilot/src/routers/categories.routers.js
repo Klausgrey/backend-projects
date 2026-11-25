@@ -18,7 +18,7 @@ import { Router } from "express";
 const router = Router();
 
 router.post(
-	"./categories",
+	"/categories",
 	verifyToken,
 	authorize("admin"),
 	validator(createCategorySchema),
@@ -26,13 +26,13 @@ router.post(
 );
 
 router.get(
-	"./categories/",
+	"/categories/",
 	verifyToken,
 	authorize("admin", "staff"),
 	getAllCategory,
 );
 router.get(
-	"./categories/:id",
+	"/categories/:id",
 	verifyToken,
 	authorize("admin", "staff"),
 	getCategoryById,
@@ -49,7 +49,7 @@ router.patch(
 router.patch(
 	"/categories/:id/status",
 	verifyToken,
-	authorize("admiin"),
+	authorize("admin"),
 	validator(updateCategoryStatusSchema),
 	updateCategoryStatus,
 );

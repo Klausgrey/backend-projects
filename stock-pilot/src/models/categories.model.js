@@ -5,7 +5,7 @@ export async function createCategories(name, description) {
 	const {
 		rows: [isExisting],
 	} = await pool.query(
-		sql`
+		`
 		select id
 		from categories
 		where lower(name) = lower($1)
@@ -14,10 +14,12 @@ export async function createCategories(name, description) {
 	);
 	if (isExisting) fail("this category already exists", 409);
 
-	const category = await pool.query(
-		sql`
+	const {
+		rows: [category],
+	} = await pool.query(
+		`
 		insert into categories (name, description)
-		value ($1, $2) returning id, name, description, created_at
+		values ($1, $2) returning id, name, description, created_at
 		`,
 		[name, description ?? null],
 	);
@@ -27,7 +29,7 @@ export async function createCategories(name, description) {
 
 export async function getAllCategories() {
 	const { rows } = await pool.query(
-		sql`
+		`
 		select *
 		from categories
 		`,
@@ -41,12 +43,12 @@ export async function getCategoriesById(id) {
 	const {
 		rows: [category],
 	} = await pool.query(
-		sql`
-		select id, name, description
+		`
+		select id, name, description, is_active
 		from categories
 		where id = $1
 		`,
-		[userId],
+		[id],
 	);
 	if (!category) fail("there is no category with this id", 404);
 
@@ -54,8 +56,10 @@ export async function getCategoriesById(id) {
 }
 
 export async function updateCategoriesById(id, name, description) {
-	const category = await pool.query(
-		sql`
+	const {
+		rows: [category],
+	} = await pool.query(
+		`
 		select id
 		from categories
 		where id = $1
@@ -67,7 +71,7 @@ export async function updateCategoriesById(id, name, description) {
 	const {
 		rows: [updatedCategory],
 	} = await pool.query(
-		sql`update categories
+		`update categories
 		set name = coalesce($1, name),
 		description = coalesce($2, description)
 		where id = $3
@@ -109,7 +113,7 @@ export async function updateCategoriesStatus(id, isActive) {
 	const {
 		rows: [category],
 	} = await pool.query(
-		sql`
+		`
 		update categories
 		set is_active = $1
 		where id = $2

@@ -6,7 +6,7 @@ export const createCategorySchema = Joi.object({
 });
 
 export const updatecategorySchema = Joi.object({
-	name: Joi.string().max(100).required().trim(),
+	name: Joi.string().max(100).trim(),
 	description: Joi.string().max(500),
 });
 

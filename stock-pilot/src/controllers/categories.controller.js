@@ -8,6 +8,7 @@ import {
 
 export async function createCategory(req, res) {
 	const { name, description } = req.body;
+	console.log(name, description)
 	const data = await createCategories(name, description);
 	res
 		.status(201)
@@ -32,6 +33,7 @@ export async function updateCategoryById(req, res) {
 
 export async function updateCategoryStatus(req, res) {
 	const { isActive } = req.body;
+	console.log(isActive, req.params.id)
 	const data = await updateCategoriesStatus(req.params.id, isActive);
 	res.status(200).json({ message: `${data.name} is now ${isActive}`, data });
 }
