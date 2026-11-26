@@ -1,4 +1,8 @@
-import { createProducts, getProducts } from "../models/product.model.js";
+import {
+	createProducts,
+	getProducts,
+	getProductById,
+} from "../models/product.model.js";
 
 export async function createProduct(req, res) {
 	// console.log(req.body);
@@ -9,4 +13,9 @@ export async function createProduct(req, res) {
 export async function getProduct(req, res) {
 	const data = await getProducts(req.query);
 	res.status(200).json({ message: "product gotten successfully", data });
+}
+
+export async function getProductId(req, res) {
+	const data = await getProductById(req.params.id);
+	res.status(200).json({ message: "product with the id", data });
 }

@@ -1,6 +1,7 @@
 import {
 	createProduct,
 	getProduct,
+	getProductId,
 } from "../controllers/product.controller.js";
 import { createProductSchema } from "../validators/product.validator.js";
 
@@ -20,5 +21,12 @@ router.post(
 );
 
 router.get("/products", verifyToken, authorize("admin", "staff"), getProduct);
+
+router.get(
+	"/products/:id",
+	verifyToken,
+	authorize("admin", "staff"),
+	getProductId,
+);
 
 export default router;

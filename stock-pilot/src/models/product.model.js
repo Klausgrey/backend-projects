@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+import { fail } from "../helpers/errors.js";
 
 function generateSku({ brand, name, attributes = {}, sequence }) {
 	const brandCode = brand ? brand.trim().slice(0, 3).toUpperCase() : "GEN";
@@ -177,3 +178,21 @@ export async function getProducts({
 
 	return rows;
 }
+
+export async function getProductById({ id }) {
+	const {
+		rows: [product],
+	} = await pool.query(
+		`
+		select *
+		from products
+		where id = $1
+		`,
+		[id],
+	);
+
+	if (!product) fail("this product does not exists", 404);
+	return product;
+}
+
+export async function updateProductDetails() {}
