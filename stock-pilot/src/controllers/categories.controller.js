@@ -33,7 +33,7 @@ export async function updateCategoryById(req, res) {
 
 export async function updateCategoryStatus(req, res) {
 	const { isActive } = req.body;
-	console.log(isActive, req.params.id)
+	// console.log(isActive, req.params.id)
 	const data = await updateCategoriesStatus(req.params.id, isActive);
 	res.status(200).json({ message: `${data.name} is now ${isActive}`, data });
 }

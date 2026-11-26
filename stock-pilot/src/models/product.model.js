@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-function generateSku({ brand, name, attributes, sequence }) {
+function generateSku({ brand, name, attributes = {}, sequence }) {
 	const brandCode = brand ? brand.trim().slice(0, 3).toUpperCase() : "GEN";
 
 	const productWord = name
@@ -26,7 +26,7 @@ function generateSku({ brand, name, attributes, sequence }) {
 					.map((word) => word.slice(0, 2))
 					.join("")
 					.slice(0, 3)
-			: productWord.slice(0, 3);
+			: productWord[0].slice(0, 3);
 	const sizeCodes = {
 		small: "S",
 		large: "L",
@@ -108,10 +108,10 @@ export async function createProducts({
 					product.id,
 					sku,
 					JSON.stringify(variant.attributes),
-					variant.costprice,
+					variant.costPrice,
 					variant.sellingPrice,
 					variant.stockQuantity,
-					variant.reorderStock,
+					variant.reorderLevel,
 				],
 			);
 
@@ -177,7 +177,7 @@ export async function getProducts({
 
 		select *
 		from products
-		where ($1::text is null or name ilike '%' || '$1' || '%')
+		where ($1::text is null or name ilike '%' || $1 || '%')
 		and ($2::uuid is null or category_id = $2)
 		and ($3::text is null or brand = $3)
 		order by created_at desc
