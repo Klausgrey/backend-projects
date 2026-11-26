@@ -195,4 +195,71 @@ export async function getProductById({ id }) {
 	return product;
 }
 
-export async function updateProductDetails() {}
+export async function updateProductDetails({
+	id,
+	name,
+	description,
+	brand,
+	variants = [],
+	isActive,
+}) {
+	const admin = await pool.connect();
+
+	try {
+		await admin.query("BEGIN");
+		const {
+			rows: [product],
+		} = await admin.query(
+			`
+			update products
+			set name = coalesce($1, name),
+			description = coalesce($2, description),
+			brand = coalesce($3, brand),
+			is_active = coalesce($4, is_active)
+			where id = $5
+			returning *
+			`,
+			[name ?? null, description ?? null, brand ?? null, isActive ?? null, id],
+		);
+		if (!product) fail("this product does not exists", 404);
+		let updatedVarients = [];
+		for (let variant of variants) {
+			const {
+				rows: [pv],
+			} = await admin.query(
+				`
+				update product_variants
+				set attributes = coalesce(attributes, '{}'::jsonb) || jsonb_strip_nulls(
+					jsonb_build_object('color', $1::text, 'size', $2::text)
+				),
+				cost_price = coalesce($3, cost_price),
+				stock_quantity = coalesce($4, stock_quantity),
+ 				selling_price = coalesce($5, selling_price),
+ 				reorder_level = coalesce($6, reorder_level)
+ 				where id = $7 and product_id = $8
+				returning *
+			`,
+				[
+					variant.color ?? null,
+					variant.size ?? null,
+					variant.costPrice ?? null,
+					variant.stockQuantity ?? null,
+					variant.sellingPrice ?? null,
+					variant.reorderLevel ?? null,
+					variant.id,
+					product.id,
+				],
+			);
+			if (!pv)
+				fail(`variant ${variant.id} does not exist for this product`, 404);
+			updatedVarients.push(pv);
+		}
+		await admin.query("COMMIT");
+		return { ...product, updatedVarients };
+	} catch (error) {
+		await admin.query("ROLLBACK");
+		throw error;
+	} finally {
+		admin.release();
+	}
+}
