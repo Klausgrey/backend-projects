@@ -163,17 +163,7 @@ export async function getProducts({
 	const skip = (pageNumber - 1) * pageSize;
 
 	const { rows } = await pool.query(
-		sql`
-		-- select p.id,
-		-- p.name,
-		-- p.category_id,
-		-- p.brand,
-		-- pv.product_id,
-		-- pv.sku,
-		-- pv.attributes->>'color'
-		-- from products p
-		-- left join product_variants pv
-		-- on p.id = pv.product_id
+		`
 
 		select *
 		from products

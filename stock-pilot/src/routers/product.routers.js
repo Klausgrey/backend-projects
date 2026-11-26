@@ -1,4 +1,7 @@
-import { createProduct } from "../controllers/product.controller.js";
+import {
+	createProduct,
+	getProduct,
+} from "../controllers/product.controller.js";
 import { createProductSchema } from "../validators/product.validator.js";
 
 import { authorize } from "../middleware/authorize.middleware.js";
@@ -15,5 +18,7 @@ router.post(
 	authorize("admin"),
 	createProduct,
 );
+
+router.get("/products", verifyToken, authorize("admin", "staff"), getProduct);
 
 export default router;
