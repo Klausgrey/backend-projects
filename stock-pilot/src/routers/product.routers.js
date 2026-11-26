@@ -2,6 +2,8 @@ import {
 	createProduct,
 	getProduct,
 	getProductId,
+	updateProductDetail,
+	getProductsLowStock,
 } from "../controllers/product.controller.js";
 import { createProductSchema } from "../validators/product.validator.js";
 
@@ -27,6 +29,20 @@ router.get(
 	verifyToken,
 	authorize("admin", "staff"),
 	getProductId,
+);
+
+router.patch(
+	"/products/:id",
+	verifyToken,
+	authorize("admin"),
+	updateProductDetail,
+);
+
+router.get(
+	"/products/low-stock",
+	verifyToken,
+	authorize("admin", "staff"),
+	getProductsLowStock,
 );
 
 export default router;

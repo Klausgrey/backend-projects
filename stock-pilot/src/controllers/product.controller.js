@@ -2,6 +2,8 @@ import {
 	createProducts,
 	getProducts,
 	getProductById,
+	updateProductDetails,
+	getProductsLowStocks,
 } from "../models/product.model.js";
 
 export async function createProduct(req, res) {
@@ -18,4 +20,14 @@ export async function getProduct(req, res) {
 export async function getProductId(req, res) {
 	const data = await getProductById(req.params.id);
 	res.status(200).json({ message: "product with the id", data });
+}
+
+export async function updateProductDetail(req, res) {
+	const data = await updateProductDetails(req.params.id, req.body);
+	res.status(201).json({ message: "updated values", data });
+}
+
+export async function getProductsLowStock(_req, res) {
+	const data = await getProductsLowStocks();
+	res.status(201).json({ message: "stocks with quantities less than 5", data });
 }

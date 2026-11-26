@@ -195,14 +195,10 @@ export async function getProductById({ id }) {
 	return product;
 }
 
-export async function updateProductDetails({
+export async function updateProductDetails(
 	id,
-	name,
-	description,
-	brand,
-	variants = [],
-	isActive,
-}) {
+	{ name, description, brand, variants = [], isActive },
+) {
 	const admin = await pool.connect();
 
 	try {
@@ -262,4 +258,18 @@ export async function updateProductDetails({
 	} finally {
 		admin.release();
 	}
+}
+
+export async function getProductsLowStocks() {
+	const { rows } = await pool.query(
+		`
+	select *
+	from product_variants
+	order by desc
+	where stock_quantity < 5
+	returning *
+		`,
+	);
+
+	return rows;
 }
