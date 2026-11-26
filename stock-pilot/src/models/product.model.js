@@ -164,7 +164,6 @@ export async function getProducts({
 
 	const { rows } = await pool.query(
 		`
-
 		select *
 		from products
 		where ($1::text is null or name ilike '%' || $1 || '%')
