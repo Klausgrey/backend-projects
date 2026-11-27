@@ -18,11 +18,14 @@ export async function createSuppliers({ name, email, phone, address }) {
 
 	const {
 		rows: [supplier],
-	} = await pool.query(`
+	} = await pool.query(
+		`
 		insert into suppliers (name, email, phone, address)
 		values ($1, $2, $3, $4)
 		returning *
-		`);
+		`,
+		[name, email, phone, address],
+	);
 
 	return supplier;
 }
@@ -35,4 +38,20 @@ export async function getSuppliers() {
 		`);
 
 	return rows;
+}
+export async function getSuppliersId({ id }) {
+	const {
+		rows: [supplier],
+	} = await pool.query(
+		`
+		select *
+	from suppliers
+	order by desc
+	where id = $1
+		`,
+		[id],
+	);
+	if (!supplier) fail(`this supplier with the ${id} does not exists`, 404);
+
+	return supplier;
 }
