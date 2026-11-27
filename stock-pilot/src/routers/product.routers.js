@@ -31,18 +31,18 @@ router.get(
 	getProductId,
 );
 
-router.patch(
-	"/products/:id",
-	verifyToken,
-	authorize("admin"),
-	updateProductDetail,
-);
-
 router.get(
 	"/products/low-stock",
 	verifyToken,
 	authorize("admin", "staff"),
 	getProductsLowStock,
+);
+
+router.patch(
+	"/products/:id",
+	verifyToken,
+	authorize("admin"),
+	updateProductDetail,
 );
 
 export default router;
