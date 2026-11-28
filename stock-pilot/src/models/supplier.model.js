@@ -55,3 +55,35 @@ export async function getSuppliersId({ id }) {
 
 	return supplier;
 }
+
+export async function updateSuppliersInfo(
+	id,
+	{ name, email, phone, address, isActive },
+) {
+	const {
+		rows: [supplier],
+	} = await pool.query(
+		`
+	update suppliers
+	set name = coalesce($1, name),
+	email = coalesce($2, email),
+	phone = coalesce($3, phone),
+	address = coalesce($4, address),
+	is_active = coalesce($5, is_active)
+	where id = $6
+	returning *
+		`,
+		[
+			name ?? null,
+			email ?? null,
+			phone ?? null,
+			address ?? null,
+			isActive ?? null,
+			id,
+		],
+	);
+
+	if (!supplier) fail(`this id ${id} does not exists`, 404);
+
+	return supplier;
+}
