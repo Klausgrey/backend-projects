@@ -40,6 +40,13 @@ export async function getSuppliers() {
 	return rows;
 }
 export async function getSuppliersId({ id }) {
+	// i can use this to get the varient.
+	// select p.id as productId,
+	// 	s.id as supplierId
+	// 	from products p
+	// 	left join suppliers s
+	// 	on p.id = s.id
+	// 	where p.id = $1 and s.id = $2
 	const {
 		rows: [supplier],
 	} = await pool.query(
@@ -56,6 +63,7 @@ export async function getSuppliersId({ id }) {
 	return supplier;
 }
 
+// i dont know wheather to create another endpoint to soft delete any supplier
 export async function updateSuppliersInfo(
 	id,
 	{ name, email, phone, address, isActive },
@@ -86,4 +94,41 @@ export async function updateSuppliersInfo(
 	if (!supplier) fail(`this id ${id} does not exists`, 404);
 
 	return supplier;
+}
+
+export async function linkProductsToSuppliers({ productId, supplierId }) {
+	const {
+		rows: [product],
+	} = await pool.query(
+		`
+		select *
+		from products
+		where id = $1
+		`,
+		[productId],
+	);
+
+	if (!product) fail(`product with the id ${productId} not found`, 404);
+	const {
+		rows: [supplier],
+	} = await pool.query(
+		`
+		select *
+		from products
+		where id = $1
+		`,
+		[supplierId],
+	);
+	if (!supplier) fail(`product with the id ${supplier} not found`, 404);
+
+	const {
+		rows: [productSupplierLink],
+	} = await pool.query(
+		`
+	select *
+	from product_suppliers
+	where product_id = $1 and supplier_id = $2
+		`,
+		[productId, supplierId],
+	);
 }

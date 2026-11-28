@@ -25,18 +25,19 @@ router.post(
 router.get("/products", verifyToken, authorize("admin", "staff"), getProduct);
 
 router.get(
+	"/products/low-stock",
+	verifyToken,
+	authorize("admin", "staff"),
+	getProductsLowStock,
+);
+
+router.get(
 	"/products/:id",
 	verifyToken,
 	authorize("admin", "staff"),
 	getProductId,
 );
 
-router.get(
-	"/products/low-stock",
-	verifyToken,
-	authorize("admin", "staff"),
-	getProductsLowStock,
-);
 
 router.patch(
 	"/products/:id",

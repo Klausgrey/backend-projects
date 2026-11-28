@@ -179,7 +179,7 @@ export async function getProducts({
 	return rows;
 }
 
-export async function getProductById({ id }) {
+export async function getProductById(id) {
 	const {
 		rows: [product],
 	} = await pool.query(
@@ -265,9 +265,7 @@ export async function getProductsLowStocks() {
 		`
 	select *
 	from product_variants
-	order by desc
-	where stock_quantity < 5
-	returning *
+	where stock_quantity <= 5
 		`,
 	);
 
